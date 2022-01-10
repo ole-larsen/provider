@@ -1,0 +1,282 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  title: "Service Provider API"
+  version: "1.0.0"
+host: "provider-service:3335"
+basePath: "/api/v1"
+schemes:
+- http
+paths:
+  /ping:
+    get:
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: "ping response"
+          schema:
+            "$ref": "#/definitions/ping"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
+      summary: "This API endpoint always responds with \"pong\". When used over
+        HTTP this API endpoint could also be used to measure network delays between
+        your software and the API metrics."
+  /credentials:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - type: string
+          name: client_id
+          in: query
+          required: true
+          description: "client id"
+        - type: string
+          name: domain
+          in: query
+          required: false
+          description: "domain for app"
+      responses:
+        '200':
+          description: "get client id and client secret"
+          schema:
+            "$ref": "#/definitions/credentials"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
+      summary: "This API endpoint create, store and returns credentials for new user"
+  /token:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - type: string
+          name: client_id
+          in: formData
+          required: true
+          description: "client id"
+        - type: string
+          name: client_secret
+          in: formData
+          required: true
+          description: "client secret"
+        - type: string
+          name: scope
+          in: formData
+          required: false
+          description: "get credentials"
+        - type: string
+          name: domain
+          in: formData
+          required: false
+          description: "get domain for credentials"
+        - type: string
+          name: grant_type
+          in: formData
+          required: false
+          description: "grant type credentials"
+      responses:
+        '200':
+          description: "get client id and client secret"
+          schema:
+            "$ref": "#/definitions/token"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+        - public
+      summary: "This API endpoint create, store and returns credentials for new user"
+  /authorize:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - type: string
+          name: client_id
+          in: query
+          required: true
+          description: "client id"
+        - type: string
+          name: access_type
+          in: query
+          required: false
+          description: "access type"
+        - type: string
+          name: code_challenge
+          in: query
+          required: false
+          description: "code challenge"
+        - type: string
+          name: code_challenge_method
+          in: query
+          required: false
+          description: "code challenge method"
+        - type: string
+          name: redirect_uri
+          in: query
+          required: true
+          description: "redirect uri"
+        - type: string
+          name: response_type
+          in: query
+          required: true
+          description: "response type"
+          enum:
+            - code
+            - token
+        - type: string
+          name: scope
+          in: query
+          required: true
+          description: "scope"
+        - type: string
+          name: state
+          in: query
+          required: false
+          description: "state"
+      responses:
+        '200':
+          description: "authorize"
+          schema:
+            "$ref": "#/definitions/authorize"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+        - public
+      summary: "This API endpoint create, store and returns credentials for new user"
+  /validate:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - type: string
+          name: access_token
+          in: query
+          required: false
+          description: "access token"
+      responses:
+        '200':
+          description: "authorize"
+          schema:
+            "$ref": "#/definitions/validate"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+        - public
+      summary: "This API endpoint create, store and returns credentials for new user"
+  /metrics:
+    get:
+      tags:
+        - instruments
+      summary: "Prometheus metrics"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: ok
+          schema:
+            $ref: "#/definitions/metrics"
+definitions:
+  error:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      error:
+        type: boolean
+    required:
+    - message
+    - code
+    - error
+    type: object
+  ok:
+    properties:
+      result:
+        description: Result of method execution. `ok` in case of success
+        enum:
+        - ok
+        type: string
+    required:
+    - result
+    type: object
+  ping:
+    properties:
+      ping:
+        description: Result of method execution. `pong` in case of success
+        enum:
+          - pong
+        type: string
+    required:
+      - ping
+    type: object
+  credentials:
+    properties:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+      domain:
+        type: string  
+    required:
+      - client_id
+      - client_secret
+      - domain
+    type: object
+  token:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: number
+      scope:
+        type: string
+      token_type:
+        type: string
+    required:
+      - access_token
+      - expires_in
+      - scope
+      - token_type
+    type: object
+  authorize:
+    properties:
+      data:
+        type: string
+    type: object
+  validate:
+    properties:
+      data:
+        type: string
+    type: object
+  metrics:
+    type: object
+    additionalProperties:
+      type: string
+      format: number
+tags:
+- description: "API V1 request"
+  name: v1
