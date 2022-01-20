@@ -19,7 +19,7 @@ ENV GO111MODULE=on \
     USER=appuser \
     UID=10001
 
-ENV GOPRIVATE=github.com
+ENV GOPRIVATE=gitlab01.bqtstuff.com
 
 RUN apk add --update --no-cache bash git build-base gcc abuild binutils binutils-doc gcc-doc jq curl
 
@@ -43,6 +43,6 @@ RUN adduser \
     "${USER}"
 WORKDIR $GOPATH/src/provider/
 COPY . .
-RUN make build
+RUN go build ./cmd/provider-service-server
 ENTRYPOINT ./provider-service-server --port=$PORT --host="0.0.0.0"
 EXPOSE $PORT
