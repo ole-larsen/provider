@@ -10,11 +10,11 @@ require (
 	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/go-oauth2/oauth2 v3.9.2+incompatible
-	github.com/go-openapi/analysis v0.21.1 // indirect
-	github.com/go-openapi/errors v0.20.1
+	github.com/go-openapi/analysis v0.21.2 // indirect
+	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/loads v0.21.0
-	github.com/go-openapi/runtime v0.21.0
+	github.com/go-openapi/runtime v0.21.1
 	github.com/go-openapi/spec v0.20.4
 	github.com/go-openapi/strfmt v0.21.1
 	github.com/go-openapi/swag v0.19.15
@@ -31,30 +31,29 @@ require (
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/nats-io/nats.go v1.11.0
-	github.com/prometheus/client_golang v1.11.0
+	github.com/nats-io/nats.go v1.11.0 // indirect
+	github.com/prometheus/client_golang v1.12.1
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/prometheus/tsdb v0.7.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/soheilhy/cmux v0.1.4 // indirect
-	github.com/spf13/afero v1.6.0 // indirect
+	github.com/spf13/afero v1.8.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.9.0
-	github.com/tidwall/btree v0.7.1 // indirect
-	github.com/tidwall/buntdb v1.2.7 // indirect
-	github.com/tidwall/gjson v1.12.0 // indirect
+	github.com/spf13/viper v1.10.1
+	github.com/tidwall/buntdb v1.2.9 // indirect
+	github.com/tidwall/gjson v1.13.0 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
 	go.etcd.io/bbolt v1.3.2 // indirect
-	go.mongodb.org/mongo-driver v1.8.0 // indirect
-	golang.org/x/net v0.0.0-20211123203042-d83791d6bcd9
-	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
+	go.mongodb.org/mongo-driver v1.8.2 // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
+	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	gopkg.in/go-oauth2/mongo.v3 v3.1.1
-	gopkg.in/ini.v1 v1.65.0 // indirect
+	gopkg.in/go-oauth2/mongo.v3 v3.1.1 // indirect
+	gopkg.in/ini.v1 v1.66.3 // indirect
 	gopkg.in/oauth2.v3 v3.12.0
 	gopkg.in/resty.v1 v1.12.0 // indirect
 )

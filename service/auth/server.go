@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/olelarssen/provider/models"
 	log "github.com/olelarssen/provider/service/logger"
-	"github.com/olelarssen/provider/service/settings"
 	"gopkg.in/oauth2.v3/errors"
 	"net/http"
 )
