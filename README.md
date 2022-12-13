@@ -8,4 +8,6 @@ swagger validate ./schema/swagger.yml
 
 or 
 
-```make build```
+```docker build -t olelarsen/provider --build-arg PORT=5000 .```
+```docker push olelarsen/provider```
+```docker run --name provider --env PORT=5555 -p 5000:5000 olelarsen/provider```
