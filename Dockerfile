@@ -3,7 +3,7 @@
 FROM golang:alpine as go-provider-builder
 
 ARG PORT=3000
-ENV PORT = $PORT
+ENV PORT=$PORT
 
 RUN echo $PORT > used port
 
@@ -45,7 +45,7 @@ FROM go-provider-builder
 ARG PORT=3000
 
 # set environment variables
-ENV PORT  ${PORT}
+ENV PORT=$PORT
 
 ENV GOPATH ${GOPATH}
 
