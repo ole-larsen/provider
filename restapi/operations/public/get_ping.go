@@ -29,10 +29,10 @@ func NewGetPing(ctx *middleware.Context, handler GetPingHandler) *GetPing {
 	return &GetPing{Context: ctx, Handler: handler}
 }
 
-/* GetPing swagger:route GET /ping public getPing
+/*
+	GetPing swagger:route GET /ping public getPing
 
 This API endpoint always responds with "pong". When used over HTTP this API endpoint could also be used to measure network delays between your software and the API metrics.
-
 */
 type GetPing struct {
 	Context *middleware.Context

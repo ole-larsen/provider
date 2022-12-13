@@ -45,7 +45,8 @@ func NewGetAuthorizeOK() *GetAuthorizeOK {
 	return &GetAuthorizeOK{}
 }
 
-/* GetAuthorizeOK describes a response with status code 200, with default header values.
+/*
+GetAuthorizeOK describes a response with status code 200, with default header values.
 
 authorize
 */
@@ -53,9 +54,39 @@ type GetAuthorizeOK struct {
 	Payload *models.Authorize
 }
 
+// IsSuccess returns true when this get authorize o k response has a 2xx status code
+func (o *GetAuthorizeOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get authorize o k response has a 3xx status code
+func (o *GetAuthorizeOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get authorize o k response has a 4xx status code
+func (o *GetAuthorizeOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get authorize o k response has a 5xx status code
+func (o *GetAuthorizeOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get authorize o k response a status code equal to that given
+func (o *GetAuthorizeOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetAuthorizeOK) Error() string {
 	return fmt.Sprintf("[GET /authorize][%d] getAuthorizeOK  %+v", 200, o.Payload)
 }
+
+func (o *GetAuthorizeOK) String() string {
+	return fmt.Sprintf("[GET /authorize][%d] getAuthorizeOK  %+v", 200, o.Payload)
+}
+
 func (o *GetAuthorizeOK) GetPayload() *models.Authorize {
 	return o.Payload
 }
@@ -77,7 +108,8 @@ func NewGetAuthorizeInternalServerError() *GetAuthorizeInternalServerError {
 	return &GetAuthorizeInternalServerError{}
 }
 
-/* GetAuthorizeInternalServerError describes a response with status code 500, with default header values.
+/*
+GetAuthorizeInternalServerError describes a response with status code 500, with default header values.
 
 When some error occurs
 */
@@ -85,9 +117,39 @@ type GetAuthorizeInternalServerError struct {
 	Payload *models.Error
 }
 
+// IsSuccess returns true when this get authorize internal server error response has a 2xx status code
+func (o *GetAuthorizeInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get authorize internal server error response has a 3xx status code
+func (o *GetAuthorizeInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get authorize internal server error response has a 4xx status code
+func (o *GetAuthorizeInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get authorize internal server error response has a 5xx status code
+func (o *GetAuthorizeInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get authorize internal server error response a status code equal to that given
+func (o *GetAuthorizeInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetAuthorizeInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /authorize][%d] getAuthorizeInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetAuthorizeInternalServerError) String() string {
+	return fmt.Sprintf("[GET /authorize][%d] getAuthorizeInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetAuthorizeInternalServerError) GetPayload() *models.Error {
 	return o.Payload
 }

@@ -16,7 +16,8 @@ import (
 // GetValidateOKCode is the HTTP code returned for type GetValidateOK
 const GetValidateOKCode int = 200
 
-/*GetValidateOK authorize
+/*
+GetValidateOK authorize
 
 swagger:response getValidateOK
 */
@@ -60,7 +61,8 @@ func (o *GetValidateOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 // GetValidateInternalServerErrorCode is the HTTP code returned for type GetValidateInternalServerError
 const GetValidateInternalServerErrorCode int = 500
 
-/*GetValidateInternalServerError When some error occurs
+/*
+GetValidateInternalServerError When some error occurs
 
 swagger:response getValidateInternalServerError
 */

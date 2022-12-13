@@ -29,10 +29,10 @@ func NewGetValidate(ctx *middleware.Context, handler GetValidateHandler) *GetVal
 	return &GetValidate{Context: ctx, Handler: handler}
 }
 
-/* GetValidate swagger:route GET /validate public getValidate
+/*
+	GetValidate swagger:route GET /validate public getValidate
 
 This API endpoint create, store and returns credentials for new user
-
 */
 type GetValidate struct {
 	Context *middleware.Context

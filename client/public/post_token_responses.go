@@ -45,7 +45,8 @@ func NewPostTokenOK() *PostTokenOK {
 	return &PostTokenOK{}
 }
 
-/* PostTokenOK describes a response with status code 200, with default header values.
+/*
+PostTokenOK describes a response with status code 200, with default header values.
 
 get client id and client secret
 */
@@ -53,9 +54,39 @@ type PostTokenOK struct {
 	Payload *models.Token
 }
 
+// IsSuccess returns true when this post token o k response has a 2xx status code
+func (o *PostTokenOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this post token o k response has a 3xx status code
+func (o *PostTokenOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this post token o k response has a 4xx status code
+func (o *PostTokenOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this post token o k response has a 5xx status code
+func (o *PostTokenOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this post token o k response a status code equal to that given
+func (o *PostTokenOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *PostTokenOK) Error() string {
 	return fmt.Sprintf("[POST /token][%d] postTokenOK  %+v", 200, o.Payload)
 }
+
+func (o *PostTokenOK) String() string {
+	return fmt.Sprintf("[POST /token][%d] postTokenOK  %+v", 200, o.Payload)
+}
+
 func (o *PostTokenOK) GetPayload() *models.Token {
 	return o.Payload
 }
@@ -77,7 +108,8 @@ func NewPostTokenInternalServerError() *PostTokenInternalServerError {
 	return &PostTokenInternalServerError{}
 }
 
-/* PostTokenInternalServerError describes a response with status code 500, with default header values.
+/*
+PostTokenInternalServerError describes a response with status code 500, with default header values.
 
 When some error occurs
 */
@@ -85,9 +117,39 @@ type PostTokenInternalServerError struct {
 	Payload *models.Error
 }
 
+// IsSuccess returns true when this post token internal server error response has a 2xx status code
+func (o *PostTokenInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this post token internal server error response has a 3xx status code
+func (o *PostTokenInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this post token internal server error response has a 4xx status code
+func (o *PostTokenInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this post token internal server error response has a 5xx status code
+func (o *PostTokenInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this post token internal server error response a status code equal to that given
+func (o *PostTokenInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *PostTokenInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /token][%d] postTokenInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *PostTokenInternalServerError) String() string {
+	return fmt.Sprintf("[POST /token][%d] postTokenInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *PostTokenInternalServerError) GetPayload() *models.Error {
 	return o.Payload
 }

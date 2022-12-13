@@ -45,7 +45,8 @@ func NewGetValidateOK() *GetValidateOK {
 	return &GetValidateOK{}
 }
 
-/* GetValidateOK describes a response with status code 200, with default header values.
+/*
+GetValidateOK describes a response with status code 200, with default header values.
 
 authorize
 */
@@ -53,9 +54,39 @@ type GetValidateOK struct {
 	Payload *models.Validate
 }
 
+// IsSuccess returns true when this get validate o k response has a 2xx status code
+func (o *GetValidateOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get validate o k response has a 3xx status code
+func (o *GetValidateOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get validate o k response has a 4xx status code
+func (o *GetValidateOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get validate o k response has a 5xx status code
+func (o *GetValidateOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get validate o k response a status code equal to that given
+func (o *GetValidateOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetValidateOK) Error() string {
 	return fmt.Sprintf("[GET /validate][%d] getValidateOK  %+v", 200, o.Payload)
 }
+
+func (o *GetValidateOK) String() string {
+	return fmt.Sprintf("[GET /validate][%d] getValidateOK  %+v", 200, o.Payload)
+}
+
 func (o *GetValidateOK) GetPayload() *models.Validate {
 	return o.Payload
 }
@@ -77,7 +108,8 @@ func NewGetValidateInternalServerError() *GetValidateInternalServerError {
 	return &GetValidateInternalServerError{}
 }
 
-/* GetValidateInternalServerError describes a response with status code 500, with default header values.
+/*
+GetValidateInternalServerError describes a response with status code 500, with default header values.
 
 When some error occurs
 */
@@ -85,9 +117,39 @@ type GetValidateInternalServerError struct {
 	Payload *models.Error
 }
 
+// IsSuccess returns true when this get validate internal server error response has a 2xx status code
+func (o *GetValidateInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get validate internal server error response has a 3xx status code
+func (o *GetValidateInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get validate internal server error response has a 4xx status code
+func (o *GetValidateInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get validate internal server error response has a 5xx status code
+func (o *GetValidateInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get validate internal server error response a status code equal to that given
+func (o *GetValidateInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetValidateInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /validate][%d] getValidateInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetValidateInternalServerError) String() string {
+	return fmt.Sprintf("[GET /validate][%d] getValidateInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetValidateInternalServerError) GetPayload() *models.Error {
 	return o.Payload
 }

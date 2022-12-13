@@ -16,7 +16,8 @@ import (
 // PostTokenOKCode is the HTTP code returned for type PostTokenOK
 const PostTokenOKCode int = 200
 
-/*PostTokenOK get client id and client secret
+/*
+PostTokenOK get client id and client secret
 
 swagger:response postTokenOK
 */
@@ -60,7 +61,8 @@ func (o *PostTokenOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 // PostTokenInternalServerErrorCode is the HTTP code returned for type PostTokenInternalServerError
 const PostTokenInternalServerErrorCode int = 500
 
-/*PostTokenInternalServerError When some error occurs
+/*
+PostTokenInternalServerError When some error occurs
 
 swagger:response postTokenInternalServerError
 */

@@ -39,7 +39,8 @@ func NewGetMetricsOK() *GetMetricsOK {
 	return &GetMetricsOK{}
 }
 
-/* GetMetricsOK describes a response with status code 200, with default header values.
+/*
+GetMetricsOK describes a response with status code 200, with default header values.
 
 ok
 */
@@ -47,9 +48,39 @@ type GetMetricsOK struct {
 	Payload models.Metrics
 }
 
+// IsSuccess returns true when this get metrics o k response has a 2xx status code
+func (o *GetMetricsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get metrics o k response has a 3xx status code
+func (o *GetMetricsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get metrics o k response has a 4xx status code
+func (o *GetMetricsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get metrics o k response has a 5xx status code
+func (o *GetMetricsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get metrics o k response a status code equal to that given
+func (o *GetMetricsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetMetricsOK) Error() string {
 	return fmt.Sprintf("[GET /metrics][%d] getMetricsOK  %+v", 200, o.Payload)
 }
+
+func (o *GetMetricsOK) String() string {
+	return fmt.Sprintf("[GET /metrics][%d] getMetricsOK  %+v", 200, o.Payload)
+}
+
 func (o *GetMetricsOK) GetPayload() models.Metrics {
 	return o.Payload
 }

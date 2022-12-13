@@ -29,10 +29,10 @@ func NewPostToken(ctx *middleware.Context, handler PostTokenHandler) *PostToken 
 	return &PostToken{Context: ctx, Handler: handler}
 }
 
-/* PostToken swagger:route POST /token public postToken
+/*
+	PostToken swagger:route POST /token public postToken
 
 This API endpoint create, store and returns credentials for new user
-
 */
 type PostToken struct {
 	Context *middleware.Context

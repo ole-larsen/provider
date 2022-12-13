@@ -36,7 +36,7 @@ type ClientService interface {
 }
 
 /*
-  GetMetrics prometheus metrics
+GetMetrics prometheus metrics
 */
 func (a *Client) GetMetrics(params *GetMetricsParams, opts ...ClientOption) (*GetMetricsOK, error) {
 	// TODO: Validate the params before sending

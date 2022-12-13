@@ -29,10 +29,10 @@ func NewGetCredentials(ctx *middleware.Context, handler GetCredentialsHandler) *
 	return &GetCredentials{Context: ctx, Handler: handler}
 }
 
-/* GetCredentials swagger:route GET /credentials public getCredentials
+/*
+	GetCredentials swagger:route GET /credentials public getCredentials
 
 This API endpoint create, store and returns credentials for new user
-
 */
 type GetCredentials struct {
 	Context *middleware.Context

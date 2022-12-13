@@ -29,10 +29,10 @@ func NewGetAuthorize(ctx *middleware.Context, handler GetAuthorizeHandler) *GetA
 	return &GetAuthorize{Context: ctx, Handler: handler}
 }
 
-/* GetAuthorize swagger:route GET /authorize public getAuthorize
+/*
+	GetAuthorize swagger:route GET /authorize public getAuthorize
 
 This API endpoint create, store and returns credentials for new user
-
 */
 type GetAuthorize struct {
 	Context *middleware.Context

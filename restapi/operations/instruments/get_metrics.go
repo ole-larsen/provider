@@ -29,10 +29,10 @@ func NewGetMetrics(ctx *middleware.Context, handler GetMetricsHandler) *GetMetri
 	return &GetMetrics{Context: ctx, Handler: handler}
 }
 
-/* GetMetrics swagger:route GET /metrics instruments getMetrics
+/*
+	GetMetrics swagger:route GET /metrics instruments getMetrics
 
 Prometheus metrics
-
 */
 type GetMetrics struct {
 	Context *middleware.Context

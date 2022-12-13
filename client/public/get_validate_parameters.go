@@ -52,10 +52,12 @@ func NewGetValidateParamsWithHTTPClient(client *http.Client) *GetValidateParams 
 	}
 }
 
-/* GetValidateParams contains all the parameters to send to the API endpoint
-   for the get validate operation.
+/*
+GetValidateParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get validate operation.
+
+	Typically these are written to a http.Request.
 */
 type GetValidateParams struct {
 

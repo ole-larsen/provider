@@ -5,27 +5,26 @@ package restapi
 import (
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-session/session"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/olelarssen/provider/restapi/operations/instruments"
 	"github.com/olelarssen/provider/service/auth"
 	"github.com/olelarssen/provider/service/metrics"
 	"github.com/olelarssen/provider/service/settings"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
+	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
 	"time"
 
-	"net/http"
-
 	"github.com/olelarssen/provider/restapi/operations"
 	"github.com/olelarssen/provider/restapi/operations/public"
 	log "github.com/olelarssen/provider/service/logger"
-	"fmt"
 )
 
 //go:generate swagger generate metrics --target ../../provider-service --name ProviderService --spec ../schema/swagger.yml --principal interface{}
@@ -39,8 +38,14 @@ func dumpRequest(writer io.Writer, header string, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	writer.Write([]byte("\n" + header + ": \n"))
-	writer.Write(data)
+	_, err = writer.Write([]byte("\n" + header + ": \n"))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write(data)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -71,114 +76,108 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 		})
 	}
 
-	if api.PublicGetCredentialsHandler != nil {
-		api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
-			domain := settings.Settings.Domain
-			if params.Domain != nil {
-				domain = *params.Domain
+	api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
+		_ = dumpRequest(os.Stdout, "credentials", params.HTTPRequest)
+		domain := settings.Settings.Domain
+		if params.Domain != nil {
+			domain = *params.Domain
+		}
+		payload := s.NewClient(domain, params.ClientID)
+		logger.Infoln("domain:", domain, params.ClientID, payload)
+		return public.NewGetCredentialsOK().WithPayload(payload)
+	})
+
+	api.PublicGetAuthorizeHandler = public.GetAuthorizeHandlerFunc(func(params public.GetAuthorizeParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "authorize", params.HTTPRequest)
+			store, err := session.Start(params.HTTPRequest.Context(), w, params.HTTPRequest)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
 			}
-			payload := s.NewClient(domain, params.ClientID)
-			logger.Infoln("domain:", domain, params.ClientID, payload)
-			return public.NewGetCredentialsOK().WithPayload(payload)
+			var form url.Values
+			if v, ok := store.Get("ReturnUri"); ok {
+				form = v.(url.Values)
+			}
+			logger.Infoln(params.ClientID)
+
+			if &params.RedirectURI != nil {
+				logger.Infoln("RedirectURI:", params.RedirectURI)
+			}
+			if &params.Scope != nil {
+				logger.Infoln("Scope:", params.Scope)
+			}
+			if params.State != nil {
+				logger.Infoln("State", params.State)
+			}
+			logger.Infoln("Form:", form)
+			logger.Infoln("HEADER:", params.HTTPRequest.Header.Get("Cf-Access-Authenticated-User-Email"))
+			params.HTTPRequest.Form = form
+
+			store.Delete("ReturnUri")
+			store.Save()
+
+			err = s.Service.HandleAuthorizeRequest(w, params.HTTPRequest)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
 		})
-	}
+	})
 
-	if api.PublicGetAuthorizeHandler != nil {
-		api.PublicGetAuthorizeHandler = public.GetAuthorizeHandlerFunc(func(params public.GetAuthorizeParams) middleware.Responder {
-			return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer){
-				_ = dumpRequest(os.Stdout, "authorize", params.HTTPRequest)
-				store, err := session.Start(params.HTTPRequest.Context(), w, params.HTTPRequest)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-				var form url.Values
-				if v, ok := store.Get("ReturnUri"); ok {
-					form = v.(url.Values)
-				}
-				logger.Infoln(params.ClientID)
-
-				if &params.RedirectURI != nil {
-					logger.Infoln("RedirectURI:", params.RedirectURI)
-				}
-				if &params.Scope != nil {
-					logger.Infoln("Scope:", params.Scope)
-				}
-				if params.State != nil {
-					logger.Infoln("State", params.State)
-				}
-				logger.Infoln("Form:", form)
-				logger.Infoln("HEADER:", params.HTTPRequest.Header.Get("Cf-Access-Authenticated-User-Email"))
-				params.HTTPRequest.Form = form
-
-				store.Delete("ReturnUri")
-				store.Save()
-
-				err = s.Service.HandleAuthorizeRequest(w, params.HTTPRequest)
-
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusBadRequest)
-				}
-			})
+	api.PublicPostTokenHandler = public.PostTokenHandlerFunc(func(params public.PostTokenParams) middleware.Responder {
+		// http://localhost:5555/api/v1/token?client_id=222222&client_secret=22222222&domain=http://localhost:9094&grant_type=client_credentials&scope=read
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "token", params.HTTPRequest) // Ignore the error
+			logger.Infoln(params.ClientID)
+			if params.Scope != nil {
+				logger.Infoln("Scope:", *params.Scope)
+			}
+			if params.Domain != nil {
+				logger.Infoln("Domain:", *params.Domain)
+			}
+			if &params.ClientSecret != nil {
+				logger.Infoln("ClientSecret:", params.ClientSecret)
+			}
+			if params.GrantType != nil {
+				logger.Infoln("GrantType:", *params.GrantType)
+			}
+			logger.Infoln("Form:", params.HTTPRequest.Form)
+			err := s.Service.HandleTokenRequest(w, params.HTTPRequest)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
 		})
-	}
+	})
 
-	if api.PublicPostTokenHandler != nil {
-		api.PublicPostTokenHandler = public.PostTokenHandlerFunc(func(params public.PostTokenParams) middleware.Responder {
-			// http://localhost:5555/api/v1/token?client_id=222222&client_secret=22222222&domain=http://localhost:9094&grant_type=client_credentials&scope=read
-			return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer){
-				_ = dumpRequest(os.Stdout, "token", params.HTTPRequest) // Ignore the error
-				logger.Infoln(params.ClientID)
-				if params.Scope != nil {
-					logger.Infoln("Scope:", *params.Scope)
-				}
-				if params.Domain != nil {
-					logger.Infoln("Domain:", *params.Domain)
-				}
-				if &params.ClientSecret != nil {
-					logger.Infoln("ClientSecret:", params.ClientSecret)
-				}
-				if params.GrantType != nil {
-					logger.Infoln("GrantType:", *params.GrantType)
-				}
-				logger.Infoln("Form:", params.HTTPRequest.Form)
-				err := s.Service.HandleTokenRequest(w, params.HTTPRequest)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusBadRequest)
-				}
-			})
+	api.PublicGetValidateHandler = public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "validate", params.HTTPRequest)
+			token, err := s.Service.ValidationBearerToken(params.HTTPRequest)
+			if params.AccessToken != nil {
+				logger.Infoln(*params.AccessToken)
+			}
+			if err != nil {
+				logger.Errorln(err)
+				http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+				return
+			}
+
+			data := map[string]interface{}{
+				"expires_in":   int64(token.GetAccessCreateAt().Add(token.GetAccessExpiresIn()).Sub(time.Now()).Seconds()),
+				"client_id":    token.GetClientID(),
+				"user_id":      token.GetUserID(),
+				"access_token": token.GetAccess(),
+			}
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode(data)
 		})
-	}
+	})
 
-	if api.PublicGetValidateHandler != nil {
-		api.PublicGetValidateHandler = public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
-			return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer){
-				_ = dumpRequest(os.Stdout, "validate", params.HTTPRequest) // Ignore the error
-				token, err := s.Service.ValidationBearerToken(params.HTTPRequest)
-				if params.AccessToken != nil {
-					logger.Infoln(*params.AccessToken)
-				}
-				if err != nil {
-					logger.Errorln(err)
-					http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
-					return
-				}
-
-				data := map[string]interface{}{
-					"expires_in": int64(token.GetAccessCreateAt().Add(token.GetAccessExpiresIn()).Sub(time.Now()).Seconds()),
-					"client_id":  token.GetClientID(),
-					"user_id":    token.GetUserID(),
-					"access_token": token.GetAccess(),
-				}
-				logger.Infoln(data)
-				e := json.NewEncoder(w)
-				e.SetIndent("", "  ")
-				e.Encode(data)
-			})
-		})
-	}
 	api.InstrumentsGetMetricsHandler = instruments.GetMetricsHandlerFunc(func(params instruments.GetMetricsParams) middleware.Responder {
-		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer){
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "metrics", params.HTTPRequest)
 			promhttp.Handler().ServeHTTP(w, params.HTTPRequest)
 		})
 	})

@@ -44,7 +44,7 @@ type ClientService interface {
 }
 
 /*
-  GetAuthorize this API endpoint create store and returns credentials for new user
+GetAuthorize this API endpoint create store and returns credentials for new user
 */
 func (a *Client) GetAuthorize(params *GetAuthorizeParams, opts ...ClientOption) (*GetAuthorizeOK, error) {
 	// TODO: Validate the params before sending
@@ -82,7 +82,7 @@ func (a *Client) GetAuthorize(params *GetAuthorizeParams, opts ...ClientOption) 
 }
 
 /*
-  GetCredentials this API endpoint create store and returns credentials for new user
+GetCredentials this API endpoint create store and returns credentials for new user
 */
 func (a *Client) GetCredentials(params *GetCredentialsParams, opts ...ClientOption) (*GetCredentialsOK, error) {
 	// TODO: Validate the params before sending
@@ -120,7 +120,7 @@ func (a *Client) GetCredentials(params *GetCredentialsParams, opts ...ClientOpti
 }
 
 /*
-  GetPing this API endpoint always responds with pong when used over HTTP this API endpoint could also be used to measure network delays between your software and the API metrics
+GetPing this API endpoint always responds with pong when used over HTTP this API endpoint could also be used to measure network delays between your software and the API metrics
 */
 func (a *Client) GetPing(params *GetPingParams, opts ...ClientOption) (*GetPingOK, error) {
 	// TODO: Validate the params before sending
@@ -158,7 +158,7 @@ func (a *Client) GetPing(params *GetPingParams, opts ...ClientOption) (*GetPingO
 }
 
 /*
-  GetValidate this API endpoint create store and returns credentials for new user
+GetValidate this API endpoint create store and returns credentials for new user
 */
 func (a *Client) GetValidate(params *GetValidateParams, opts ...ClientOption) (*GetValidateOK, error) {
 	// TODO: Validate the params before sending
@@ -196,7 +196,7 @@ func (a *Client) GetValidate(params *GetValidateParams, opts ...ClientOption) (*
 }
 
 /*
-  PostToken this API endpoint create store and returns credentials for new user
+PostToken this API endpoint create store and returns credentials for new user
 */
 func (a *Client) PostToken(params *PostTokenParams, opts ...ClientOption) (*PostTokenOK, error) {
 	// TODO: Validate the params before sending

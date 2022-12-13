@@ -45,7 +45,8 @@ func NewGetCredentialsOK() *GetCredentialsOK {
 	return &GetCredentialsOK{}
 }
 
-/* GetCredentialsOK describes a response with status code 200, with default header values.
+/*
+GetCredentialsOK describes a response with status code 200, with default header values.
 
 get client id and client secret
 */
@@ -53,9 +54,39 @@ type GetCredentialsOK struct {
 	Payload *models.Credentials
 }
 
+// IsSuccess returns true when this get credentials o k response has a 2xx status code
+func (o *GetCredentialsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get credentials o k response has a 3xx status code
+func (o *GetCredentialsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get credentials o k response has a 4xx status code
+func (o *GetCredentialsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get credentials o k response has a 5xx status code
+func (o *GetCredentialsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get credentials o k response a status code equal to that given
+func (o *GetCredentialsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetCredentialsOK) Error() string {
 	return fmt.Sprintf("[GET /credentials][%d] getCredentialsOK  %+v", 200, o.Payload)
 }
+
+func (o *GetCredentialsOK) String() string {
+	return fmt.Sprintf("[GET /credentials][%d] getCredentialsOK  %+v", 200, o.Payload)
+}
+
 func (o *GetCredentialsOK) GetPayload() *models.Credentials {
 	return o.Payload
 }
@@ -77,7 +108,8 @@ func NewGetCredentialsInternalServerError() *GetCredentialsInternalServerError {
 	return &GetCredentialsInternalServerError{}
 }
 
-/* GetCredentialsInternalServerError describes a response with status code 500, with default header values.
+/*
+GetCredentialsInternalServerError describes a response with status code 500, with default header values.
 
 When some error occurs
 */
@@ -85,9 +117,39 @@ type GetCredentialsInternalServerError struct {
 	Payload *models.Error
 }
 
+// IsSuccess returns true when this get credentials internal server error response has a 2xx status code
+func (o *GetCredentialsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get credentials internal server error response has a 3xx status code
+func (o *GetCredentialsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get credentials internal server error response has a 4xx status code
+func (o *GetCredentialsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get credentials internal server error response has a 5xx status code
+func (o *GetCredentialsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get credentials internal server error response a status code equal to that given
+func (o *GetCredentialsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetCredentialsInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /credentials][%d] getCredentialsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetCredentialsInternalServerError) String() string {
+	return fmt.Sprintf("[GET /credentials][%d] getCredentialsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetCredentialsInternalServerError) GetPayload() *models.Error {
 	return o.Payload
 }

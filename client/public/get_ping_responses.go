@@ -45,7 +45,8 @@ func NewGetPingOK() *GetPingOK {
 	return &GetPingOK{}
 }
 
-/* GetPingOK describes a response with status code 200, with default header values.
+/*
+GetPingOK describes a response with status code 200, with default header values.
 
 ping response
 */
@@ -53,9 +54,39 @@ type GetPingOK struct {
 	Payload *models.Ping
 }
 
+// IsSuccess returns true when this get ping o k response has a 2xx status code
+func (o *GetPingOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get ping o k response has a 3xx status code
+func (o *GetPingOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get ping o k response has a 4xx status code
+func (o *GetPingOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get ping o k response has a 5xx status code
+func (o *GetPingOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get ping o k response a status code equal to that given
+func (o *GetPingOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetPingOK) Error() string {
 	return fmt.Sprintf("[GET /ping][%d] getPingOK  %+v", 200, o.Payload)
 }
+
+func (o *GetPingOK) String() string {
+	return fmt.Sprintf("[GET /ping][%d] getPingOK  %+v", 200, o.Payload)
+}
+
 func (o *GetPingOK) GetPayload() *models.Ping {
 	return o.Payload
 }
@@ -77,7 +108,8 @@ func NewGetPingInternalServerError() *GetPingInternalServerError {
 	return &GetPingInternalServerError{}
 }
 
-/* GetPingInternalServerError describes a response with status code 500, with default header values.
+/*
+GetPingInternalServerError describes a response with status code 500, with default header values.
 
 When some error occurs
 */
@@ -85,9 +117,39 @@ type GetPingInternalServerError struct {
 	Payload *models.Error
 }
 
+// IsSuccess returns true when this get ping internal server error response has a 2xx status code
+func (o *GetPingInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get ping internal server error response has a 3xx status code
+func (o *GetPingInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get ping internal server error response has a 4xx status code
+func (o *GetPingInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get ping internal server error response has a 5xx status code
+func (o *GetPingInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get ping internal server error response a status code equal to that given
+func (o *GetPingInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetPingInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /ping][%d] getPingInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetPingInternalServerError) String() string {
+	return fmt.Sprintf("[GET /ping][%d] getPingInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetPingInternalServerError) GetPayload() *models.Error {
 	return o.Payload
 }

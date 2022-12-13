@@ -16,7 +16,8 @@ import (
 // GetPingOKCode is the HTTP code returned for type GetPingOK
 const GetPingOKCode int = 200
 
-/*GetPingOK ping response
+/*
+GetPingOK ping response
 
 swagger:response getPingOK
 */
@@ -60,7 +61,8 @@ func (o *GetPingOK) WriteResponse(rw http.ResponseWriter, producer runtime.Produ
 // GetPingInternalServerErrorCode is the HTTP code returned for type GetPingInternalServerError
 const GetPingInternalServerErrorCode int = 500
 
-/*GetPingInternalServerError When some error occurs
+/*
+GetPingInternalServerError When some error occurs
 
 swagger:response getPingInternalServerError
 */

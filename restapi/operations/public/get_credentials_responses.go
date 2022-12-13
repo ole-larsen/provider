@@ -16,7 +16,8 @@ import (
 // GetCredentialsOKCode is the HTTP code returned for type GetCredentialsOK
 const GetCredentialsOKCode int = 200
 
-/*GetCredentialsOK get client id and client secret
+/*
+GetCredentialsOK get client id and client secret
 
 swagger:response getCredentialsOK
 */
@@ -60,7 +61,8 @@ func (o *GetCredentialsOK) WriteResponse(rw http.ResponseWriter, producer runtim
 // GetCredentialsInternalServerErrorCode is the HTTP code returned for type GetCredentialsInternalServerError
 const GetCredentialsInternalServerErrorCode int = 500
 
-/*GetCredentialsInternalServerError When some error occurs
+/*
+GetCredentialsInternalServerError When some error occurs
 
 swagger:response getCredentialsInternalServerError
 */

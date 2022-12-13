@@ -16,7 +16,8 @@ import (
 // GetAuthorizeOKCode is the HTTP code returned for type GetAuthorizeOK
 const GetAuthorizeOKCode int = 200
 
-/*GetAuthorizeOK authorize
+/*
+GetAuthorizeOK authorize
 
 swagger:response getAuthorizeOK
 */
@@ -60,7 +61,8 @@ func (o *GetAuthorizeOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 // GetAuthorizeInternalServerErrorCode is the HTTP code returned for type GetAuthorizeInternalServerError
 const GetAuthorizeInternalServerErrorCode int = 500
 
-/*GetAuthorizeInternalServerError When some error occurs
+/*
+GetAuthorizeInternalServerError When some error occurs
 
 swagger:response getAuthorizeInternalServerError
 */

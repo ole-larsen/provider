@@ -52,10 +52,12 @@ func NewPostTokenParamsWithHTTPClient(client *http.Client) *PostTokenParams {
 	}
 }
 
-/* PostTokenParams contains all the parameters to send to the API endpoint
-   for the post token operation.
+/*
+PostTokenParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the post token operation.
+
+	Typically these are written to a http.Request.
 */
 type PostTokenParams struct {
 
