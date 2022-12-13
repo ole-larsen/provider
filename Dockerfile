@@ -20,13 +20,14 @@ RUN adduser \
     "${USER}"
 
 #https://docs.docker.com/language/golang/build-images/
-WORKDIR $GOPATH/src/provider/
+RUN mkdir -p $GOPATH/src/github.com/ole-larsen/provider
+WORKDIR $GOPATH/src/
 
 COPY . .
 
 RUN go mod download
 
-RUN go build ./cmd/provider-service-server
+RUN go build -o bin/provider-service-server ./cmd/provider-service-server
 
 # STEP 2 executable binary
 FROM alpine:latest as provider
@@ -40,7 +41,7 @@ WORKDIR /usr/local/bin/
 
 # copy compiled binary and start the app
 
-COPY --from=go-provider-builder .$GOPATH/src/provider/provider-service-server ./provider-service-server
+COPY --from=go-provider-builder .$GOPATH/src/bin/provider-service-server ./provider-service-server
 
 EXPOSE 5555
 ENTRYPOINT ./provider-service-server --port=5555 --host="0.0.0.0"
