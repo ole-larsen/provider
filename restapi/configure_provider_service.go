@@ -6,6 +6,13 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"os"
+	"time"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
@@ -15,12 +22,6 @@ import (
 	"github.com/olelarssen/provider/service/metrics"
 	"github.com/olelarssen/provider/service/settings"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"io"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
-	"os"
-	"time"
 
 	"github.com/olelarssen/provider/restapi/operations"
 	"github.com/olelarssen/provider/restapi/operations/public"
@@ -169,6 +170,35 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				"user_id":      token.GetUserID(),
 				"access_token": token.GetAccess(),
 			}
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode(data)
+		})
+	})
+
+	api.PublicPostRefreshHandler = public.PostRefreshHandlerFunc(func(params public.PostRefreshParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "refresh", params.HTTPRequest)
+
+			if params.RefreshToken != nil {
+				logger.Infoln(*params.RefreshToken)
+			}
+
+			token, err := s.Service.Manager.LoadRefreshToken(*params.RefreshToken)
+
+			if err != nil {
+				logger.Errorln(err)
+				http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+				return
+			}
+
+			data := map[string]interface{}{
+				"expires_in":   int64(token.GetRefreshCreateAt().Add(token.GetRefreshExpiresIn()).Sub(time.Now()).Seconds()),
+				"client_id":    token.GetClientID(),
+				"user_id":      token.GetUserID(),
+				"access_token": token.GetAccess(),
+			}
+
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
 			e.Encode(data)

@@ -61,6 +61,9 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetValidateHandler: public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetValidate has not yet been implemented")
 		}),
+		PublicPostRefreshHandler: public.PostRefreshHandlerFunc(func(params public.PostRefreshParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.PostRefresh has not yet been implemented")
+		}),
 		PublicPostTokenHandler: public.PostTokenHandlerFunc(func(params public.PostTokenParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.PostToken has not yet been implemented")
 		}),
@@ -113,6 +116,8 @@ type ProviderServiceAPI struct {
 	PublicGetPingHandler public.GetPingHandler
 	// PublicGetValidateHandler sets the operation handler for the get validate operation
 	PublicGetValidateHandler public.GetValidateHandler
+	// PublicPostRefreshHandler sets the operation handler for the post refresh operation
+	PublicPostRefreshHandler public.PostRefreshHandler
 	// PublicPostTokenHandler sets the operation handler for the post token operation
 	PublicPostTokenHandler public.PostTokenHandler
 
@@ -209,6 +214,9 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetValidateHandler == nil {
 		unregistered = append(unregistered, "public.GetValidateHandler")
+	}
+	if o.PublicPostRefreshHandler == nil {
+		unregistered = append(unregistered, "public.PostRefreshHandler")
 	}
 	if o.PublicPostTokenHandler == nil {
 		unregistered = append(unregistered, "public.PostTokenHandler")
@@ -326,6 +334,10 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
+	o.handlers["POST"]["/refresh"] = public.NewPostRefresh(o.context, o.PublicPostRefreshHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
 	o.handlers["POST"]["/token"] = public.NewPostToken(o.context, o.PublicPostTokenHandler)
 }
 
@@ -368,6 +380,6 @@ func (o *ProviderServiceAPI) AddMiddlewareFor(method, path string, builder middl
 	}
 	o.Init()
 	if h, ok := o.handlers[um][path]; ok {
-		o.handlers[method][path] = builder(h)
+		o.handlers[um][path] = builder(h)
 	}
 }

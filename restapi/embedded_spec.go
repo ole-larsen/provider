@@ -202,6 +202,48 @@ func init() {
         }
       }
     },
+    "/refresh": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint create, store and returns credentials for new user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "access token",
+            "name": "access_token",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "refresh token",
+            "name": "refresh_token",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get client id and client secret",
+            "schema": {
+              "$ref": "#/definitions/token"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/token": {
       "post": {
         "consumes": [
@@ -598,6 +640,48 @@ func init() {
             "description": "ping response",
             "schema": {
               "$ref": "#/definitions/ping"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/refresh": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint create, store and returns credentials for new user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "access token",
+            "name": "access_token",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "refresh token",
+            "name": "refresh_token",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get client id and client secret",
+            "schema": {
+              "$ref": "#/definitions/token"
             }
           },
           "500": {
