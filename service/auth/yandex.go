@@ -14,7 +14,7 @@ import (
 	"golang.org/x/oauth2/yandex"
 )
 
-const oauthYandexUrlAPI = "https://oauth.yandex.com/authorize?response_type=token&client_id="
+const oauthYandexUrlAPI = "https://login.yandex.ru/info?format=json"
 
 var yandexOauthConfig = &oauth2.Config{
 	RedirectURL:  settings.Settings.Auth.Yandex.Callback,
@@ -30,17 +30,29 @@ func getUserDataFromYandex(code string) (*models.UserInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
 	}
-	fmt.Println(token)
-	response, err := http.Get(oauthYandexUrlAPI + settings.Settings.Auth.Yandex.ClientID)
+
+	client := http.Client{}
+	req, err := http.NewRequest("GET", oauthYandexUrlAPI, nil)
+	if err != nil {
+		//Handle Error
+	}
+
+	req.Header = http.Header{
+		"Content-Type":  {"application/json"},
+		"Authorization": {"OAuth " + token.AccessToken},
+	}
+
+	response, err := client.Do(req)
+	defer response.Body.Close()
 	if err != nil {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
-	defer response.Body.Close()
+
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed read response: %s", err.Error())
 	}
-
+	fmt.Println(contents)
 	userInfo := models.UserInfo{}
 
 	err = json.Unmarshal([]byte(contents), &userInfo)
