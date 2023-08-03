@@ -4,12 +4,14 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 
 	"github.com/go-openapi/runtime"
+	"github.com/olelarssen/provider/models"
 	"github.com/olelarssen/provider/service/settings"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -37,7 +39,7 @@ func generateStateOauthCookie(w http.ResponseWriter) string {
 	return state
 }
 
-func getUserDataFromGoogle(code string) ([]byte, error) {
+func getUserDataFromGoogle(code string) (*models.UserInfo, error) {
 	// Use code to get token and get user info from Google.
 
 	token, err := googleOauthConfig.Exchange(context.Background(), code)
@@ -53,7 +55,14 @@ func getUserDataFromGoogle(code string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed read response: %s", err.Error())
 	}
-	return contents, nil
+
+	userInfo := models.UserInfo{}
+
+	err = json.Unmarshal([]byte(contents), &userInfo)
+	if err != nil {
+		return nil, err
+	}
+	return &userInfo, nil
 }
 
 func (s *Server) GoogleLogin(w http.ResponseWriter, p runtime.Producer) string {
@@ -67,6 +76,6 @@ func (s *Server) GoogleLogin(w http.ResponseWriter, p runtime.Producer) string {
 	return googleOauthConfig.AuthCodeURL(oauthState)
 }
 
-func (s *Server) GoogleCallback(code string) ([]byte, error) {
+func (s *Server) GoogleCallback(code string) (*models.UserInfo, error) {
 	return getUserDataFromGoogle(code)
 }

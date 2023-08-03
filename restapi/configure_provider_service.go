@@ -17,7 +17,6 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-session/session"
-	"github.com/olelarssen/provider/models"
 	"github.com/olelarssen/provider/restapi/operations/instruments"
 	"github.com/olelarssen/provider/service/auth"
 	"github.com/olelarssen/provider/service/metrics"
@@ -99,15 +98,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			data, err := s.GoogleCallback(params.HTTPRequest.FormValue("code"))
-
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-
-			userInfo := models.UserInfo{}
-
-			err = json.Unmarshal([]byte(data), &userInfo)
+			userInfo, err := s.GoogleCallback(params.HTTPRequest.FormValue("code"))
 
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
@@ -119,6 +110,37 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 		})
 	})
 
+	api.PublicGetYandexLoginHandler = public.GetYandexLoginHandlerFunc(func(params public.GetYandexLoginParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "yandex.login", params.HTTPRequest)
+			u := s.GoogleLogin(w, p)
+			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
+		})
+	})
+
+	api.PublicGetYandexCallbackHandler = public.GetYandexCallbackHandlerFunc(func(params public.GetYandexCallbackParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "yandex.callback", params.HTTPRequest)
+
+			// Read oauthState from Cookie
+			oauthState, _ := params.HTTPRequest.Cookie("oauthstate")
+
+			if params.HTTPRequest.FormValue("state") != oauthState.Value {
+				err := fmt.Errorf("invalid oauth google state")
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			userInfo, err := s.GoogleCallback(params.HTTPRequest.FormValue("code"))
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode(userInfo)
+		})
+	})
 	api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
 		_ = dumpRequest(os.Stdout, "credentials", params.HTTPRequest)
 		domain := settings.Settings.Domain

@@ -303,7 +303,7 @@ paths:
       tags:
       - public
       summary: "This API endpoint always responds ok"
-  /google/callback:
+  /yandex/callback:
     get:
       produces:
       - application/json

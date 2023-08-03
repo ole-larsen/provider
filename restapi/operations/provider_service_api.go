@@ -67,6 +67,12 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetValidateHandler: public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetValidate has not yet been implemented")
 		}),
+		PublicGetYandexCallbackHandler: public.GetYandexCallbackHandlerFunc(func(params public.GetYandexCallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetYandexCallback has not yet been implemented")
+		}),
+		PublicGetYandexLoginHandler: public.GetYandexLoginHandlerFunc(func(params public.GetYandexLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetYandexLogin has not yet been implemented")
+		}),
 		PublicPostRefreshHandler: public.PostRefreshHandlerFunc(func(params public.PostRefreshParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.PostRefresh has not yet been implemented")
 		}),
@@ -126,6 +132,10 @@ type ProviderServiceAPI struct {
 	PublicGetPingHandler public.GetPingHandler
 	// PublicGetValidateHandler sets the operation handler for the get validate operation
 	PublicGetValidateHandler public.GetValidateHandler
+	// PublicGetYandexCallbackHandler sets the operation handler for the get yandex callback operation
+	PublicGetYandexCallbackHandler public.GetYandexCallbackHandler
+	// PublicGetYandexLoginHandler sets the operation handler for the get yandex login operation
+	PublicGetYandexLoginHandler public.GetYandexLoginHandler
 	// PublicPostRefreshHandler sets the operation handler for the post refresh operation
 	PublicPostRefreshHandler public.PostRefreshHandler
 	// PublicPostTokenHandler sets the operation handler for the post token operation
@@ -230,6 +240,12 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetValidateHandler == nil {
 		unregistered = append(unregistered, "public.GetValidateHandler")
+	}
+	if o.PublicGetYandexCallbackHandler == nil {
+		unregistered = append(unregistered, "public.GetYandexCallbackHandler")
+	}
+	if o.PublicGetYandexLoginHandler == nil {
+		unregistered = append(unregistered, "public.GetYandexLoginHandler")
 	}
 	if o.PublicPostRefreshHandler == nil {
 		unregistered = append(unregistered, "public.PostRefreshHandler")
@@ -355,6 +371,14 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/validate"] = public.NewGetValidate(o.context, o.PublicGetValidateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/yandex/callback"] = public.NewGetYandexCallback(o.context, o.PublicGetYandexCallbackHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/yandex/login"] = public.NewGetYandexLogin(o.context, o.PublicGetYandexLoginHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
