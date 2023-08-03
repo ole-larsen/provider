@@ -594,6 +594,9 @@ func init() {
         "expires_in": {
           "type": "number"
         },
+        "refresh_token": {
+          "type": "string"
+        },
         "scope": {
           "type": "string"
         },
@@ -631,6 +634,10 @@ func init() {
         },
         "psuid": {
           "type": "string"
+        },
+        "token": {
+          "type": "object",
+          "$ref": "#/definitions/token"
         },
         "uid": {
           "type": "string"
@@ -1233,6 +1240,9 @@ func init() {
         "expires_in": {
           "type": "number"
         },
+        "refresh_token": {
+          "type": "string"
+        },
         "scope": {
           "type": "string"
         },
@@ -1270,6 +1280,10 @@ func init() {
         },
         "psuid": {
           "type": "string"
+        },
+        "token": {
+          "type": "object",
+          "$ref": "#/definitions/token"
         },
         "uid": {
           "type": "string"

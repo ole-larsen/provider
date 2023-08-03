@@ -27,6 +27,9 @@ type Token struct {
 	// Required: true
 	ExpiresIn *float64 `json:"expires_in"`
 
+	// refresh token
+	RefreshToken string `json:"refresh_token,omitempty"`
+
 	// scope
 	// Required: true
 	Scope *string `json:"scope"`

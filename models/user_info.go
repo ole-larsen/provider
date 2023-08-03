@@ -8,6 +8,7 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -41,6 +42,9 @@ type UserInfo struct {
 	// psuid
 	Psuid string `json:"psuid,omitempty"`
 
+	// token
+	Token *Token `json:"token,omitempty"`
+
 	// uid
 	UID string `json:"uid,omitempty"`
 
@@ -50,11 +54,69 @@ type UserInfo struct {
 
 // Validate validates this user info
 func (m *UserInfo) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateToken(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this user info based on context it is used
+func (m *UserInfo) validateToken(formats strfmt.Registry) error {
+	if swag.IsZero(m.Token) { // not required
+		return nil
+	}
+
+	if m.Token != nil {
+		if err := m.Token.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("token")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("token")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this user info based on the context it is used
 func (m *UserInfo) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateToken(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *UserInfo) contextValidateToken(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Token != nil {
+
+		if swag.IsZero(m.Token) { // not required
+			return nil
+		}
+
+		if err := m.Token.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("token")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("token")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

@@ -60,6 +60,10 @@ func getUserDataFromYandex(code string) (*models.UserInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	userInfo.Token = &models.Token{
+		AccessToken:  &token.AccessToken,
+		RefreshToken: token.RefreshToken,
+	}
 	return &userInfo, nil
 }
 

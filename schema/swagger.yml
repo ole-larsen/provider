@@ -391,6 +391,8 @@ definitions:
     properties:
       access_token:
         type: string
+      refresh_token:
+        type: string  
       expires_in:
         type: number
       scope:
@@ -416,6 +418,9 @@ definitions:
   userInfo:
     type: object
     properties:
+      token:
+        type: object
+        "$ref": "#/definitions/token"
       emails:
         type: array
         items:
