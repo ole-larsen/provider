@@ -113,7 +113,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 	api.PublicGetYandexLoginHandler = public.GetYandexLoginHandlerFunc(func(params public.GetYandexLoginParams) middleware.Responder {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 			_ = dumpRequest(os.Stdout, "yandex.login", params.HTTPRequest)
-			u := s.GoogleLogin(w, p)
+			u := s.YandexLogin(w, p)
 			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
 		})
 	})
@@ -126,11 +126,11 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			oauthState, _ := params.HTTPRequest.Cookie("oauthstate")
 
 			if params.HTTPRequest.FormValue("state") != oauthState.Value {
-				err := fmt.Errorf("invalid oauth google state")
+				err := fmt.Errorf("invalid oauth yandex state")
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			userInfo, err := s.GoogleCallback(params.HTTPRequest.FormValue("code"))
+			userInfo, err := s.YandexCallback(params.HTTPRequest.FormValue("code"))
 
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
