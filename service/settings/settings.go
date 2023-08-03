@@ -15,8 +15,15 @@ type Google struct {
 	Callback     string
 }
 
+type Yandex struct {
+	ClientID     string
+	ClientSecret string
+	Callback     string
+}
+
 type Auth struct {
 	Google
+	Yandex
 }
 
 type settings struct {
@@ -64,6 +71,23 @@ func initSettings() settings {
 
 	if !ok {
 		ss.Auth.Google.Callback = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK")
+	}
+
+	ss.Auth.Yandex.ClientID, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_ID").(string)
+
+	if !ok {
+		ss.Auth.Yandex.ClientID = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_ID")
+	}
+
+	ss.Auth.Yandex.ClientSecret, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_SECRET").(string)
+
+	if !ok {
+		ss.Auth.Yandex.ClientSecret = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_SECRET")
+	}
+	ss.Auth.Google.Callback, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK").(string)
+
+	if !ok {
+		ss.Auth.Yandex.Callback = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK")
 	}
 	logger.Println("load settings done √")
 	return ss
