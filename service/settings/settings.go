@@ -7,9 +7,20 @@ import (
 
 var Settings = initSettings()
 
+type Google struct {
+	ClientID     string
+	ClientSecret string
+	Callback     string
+}
+
+type Auth struct {
+	Google
+}
+
 type settings struct {
 	Logger log.Logger
 	Domain string
+	Auth
 }
 
 func initSettings() settings {
@@ -35,6 +46,10 @@ func initSettings() settings {
 		logger.Printf(domain)
 	}
 	ss.Domain = domain
+
+	ss.Auth.ClientID = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_ID").(string)
+	ss.Auth.ClientSecret = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET").(string)
+	ss.Auth.Callback = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
 	logger.Println("load settings done √")
 	return ss
 }

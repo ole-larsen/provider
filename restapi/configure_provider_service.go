@@ -17,6 +17,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-session/session"
+	"github.com/olelarssen/provider/models"
 	"github.com/olelarssen/provider/restapi/operations/instruments"
 	"github.com/olelarssen/provider/service/auth"
 	"github.com/olelarssen/provider/service/metrics"
@@ -59,6 +60,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 	//
 	// Example:
 	logger := log.NewLogger()
+
 	api.Logger = logger.Printf
 
 	api.UseSwaggerUI()
@@ -76,6 +78,46 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			return middleware.NotImplemented("operation public.GetPing has not yet been implemented")
 		})
 	}
+
+	api.PublicGetGoogleLoginHandler = public.GetGoogleLoginHandlerFunc(func(params public.GetGoogleLoginParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "google.login", params.HTTPRequest)
+			u := s.GoogleLogin(w, p)
+			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
+		})
+	})
+
+	api.PublicGetGoogleCallbackHandler = public.GetGoogleCallbackHandlerFunc(func(params public.GetGoogleCallbackParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "google.callback", params.HTTPRequest)
+
+			// Read oauthState from Cookie
+			oauthState, _ := params.HTTPRequest.Cookie("oauthstate")
+
+			if params.HTTPRequest.FormValue("state") != oauthState.Value {
+				err := fmt.Errorf("invalid oauth google state")
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			data, err := s.GoogleCallback(params.HTTPRequest.FormValue("code"))
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			userInfo := models.UserInfo{}
+
+			err = json.Unmarshal([]byte(data), &userInfo)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode(userInfo)
+		})
+	})
 
 	api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
 		_ = dumpRequest(os.Stdout, "credentials", params.HTTPRequest)

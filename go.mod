@@ -21,13 +21,12 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/prometheus/client_golang v1.12.1
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/afero v1.8.0 // indirect
 	github.com/spf13/viper v1.10.1
 	github.com/tidwall/buntdb v1.2.9 // indirect
 	github.com/tidwall/gjson v1.13.0 // indirect
 	go.mongodb.org/mongo-driver v1.8.2 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
-	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
+	golang.org/x/net v0.12.0
+	golang.org/x/oauth2 v0.10.0
 	gopkg.in/ini.v1 v1.66.3 // indirect
 	gopkg.in/oauth2.v3 v3.12.0
 )

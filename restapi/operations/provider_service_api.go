@@ -52,6 +52,12 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetCredentialsHandler: public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetCredentials has not yet been implemented")
 		}),
+		PublicGetGoogleCallbackHandler: public.GetGoogleCallbackHandlerFunc(func(params public.GetGoogleCallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetGoogleCallback has not yet been implemented")
+		}),
+		PublicGetGoogleLoginHandler: public.GetGoogleLoginHandlerFunc(func(params public.GetGoogleLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetGoogleLogin has not yet been implemented")
+		}),
 		InstrumentsGetMetricsHandler: instruments.GetMetricsHandlerFunc(func(params instruments.GetMetricsParams) middleware.Responder {
 			return middleware.NotImplemented("operation instruments.GetMetrics has not yet been implemented")
 		}),
@@ -110,6 +116,10 @@ type ProviderServiceAPI struct {
 	PublicGetAuthorizeHandler public.GetAuthorizeHandler
 	// PublicGetCredentialsHandler sets the operation handler for the get credentials operation
 	PublicGetCredentialsHandler public.GetCredentialsHandler
+	// PublicGetGoogleCallbackHandler sets the operation handler for the get google callback operation
+	PublicGetGoogleCallbackHandler public.GetGoogleCallbackHandler
+	// PublicGetGoogleLoginHandler sets the operation handler for the get google login operation
+	PublicGetGoogleLoginHandler public.GetGoogleLoginHandler
 	// InstrumentsGetMetricsHandler sets the operation handler for the get metrics operation
 	InstrumentsGetMetricsHandler instruments.GetMetricsHandler
 	// PublicGetPingHandler sets the operation handler for the get ping operation
@@ -205,6 +215,12 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetCredentialsHandler == nil {
 		unregistered = append(unregistered, "public.GetCredentialsHandler")
+	}
+	if o.PublicGetGoogleCallbackHandler == nil {
+		unregistered = append(unregistered, "public.GetGoogleCallbackHandler")
+	}
+	if o.PublicGetGoogleLoginHandler == nil {
+		unregistered = append(unregistered, "public.GetGoogleLoginHandler")
 	}
 	if o.InstrumentsGetMetricsHandler == nil {
 		unregistered = append(unregistered, "instruments.GetMetricsHandler")
@@ -319,6 +335,14 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/credentials"] = public.NewGetCredentials(o.context, o.PublicGetCredentialsHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/google/callback"] = public.NewGetGoogleCallback(o.context, o.PublicGetGoogleCallbackHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/google/login"] = public.NewGetGoogleLogin(o.context, o.PublicGetGoogleLoginHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

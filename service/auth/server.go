@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"net/http"
+
 	"github.com/go-oauth2/oauth2/generates"
 	"github.com/go-oauth2/oauth2/manage"
 	oauthModels "github.com/go-oauth2/oauth2/models"
@@ -11,7 +13,6 @@ import (
 	"github.com/olelarssen/provider/models"
 	log "github.com/olelarssen/provider/service/logger"
 	"gopkg.in/oauth2.v3/errors"
-	"net/http"
 )
 
 type Server struct {
@@ -20,6 +21,7 @@ type Server struct {
 	Service *server.Server
 	logger  log.Logger
 }
+
 func userAuthorizeHandler(w http.ResponseWriter, r *http.Request) (userID string, err error) {
 	sessionStore, err := session.Start(r.Context(), w, r)
 	if err != nil {
@@ -75,7 +77,7 @@ func NewServer(logger log.Logger) *Server {
 		manager: manager,
 		store:   clientStore,
 		Service: srv,
-		logger: logger,
+		logger:  logger,
 	}
 }
 
@@ -92,8 +94,8 @@ func (s *Server) NewClient(domain string, clientID string) *models.Credentials {
 		s.logger.Errorln(err)
 	}
 	return &models.Credentials{
-		ClientID: &clientID,
+		ClientID:     &clientID,
 		ClientSecret: &clientSecret,
-		Domain: &domain,
+		Domain:       &domain,
 	}
 }
