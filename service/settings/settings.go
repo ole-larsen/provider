@@ -1,6 +1,8 @@
 package settings
 
 import (
+	"os"
+
 	log "github.com/olelarssen/provider/service/logger"
 	"github.com/spf13/viper"
 )
@@ -43,13 +45,26 @@ func initSettings() settings {
 	ss.Logger = logger
 	domain, ok := viper.Get("DOMAIN").(string)
 	if !ok {
-		logger.Printf(domain)
+		domain = os.Getenv("DOMAIN")
 	}
 	ss.Domain = domain
 
-	ss.Auth.Google.ClientID = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_ID").(string)
-	ss.Auth.Google.ClientSecret = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET").(string)
-	ss.Auth.Google.Callback = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
+	ss.Auth.Google.ClientID, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_IDE").(string)
+
+	if !ok {
+		ss.Auth.Google.ClientID = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_ID")
+	}
+
+	ss.Auth.Google.ClientSecret, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET").(string)
+
+	if !ok {
+		ss.Auth.Google.ClientSecret = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET")
+	}
+	ss.Auth.Google.Callback, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
+
+	if !ok {
+		ss.Auth.Google.Callback = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK")
+	}
 	logger.Println("load settings done √")
 	return ss
 }
