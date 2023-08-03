@@ -52,7 +52,7 @@ func getUserDataFromYandex(code string) (*models.UserInfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed read response: %s", err.Error())
 	}
-	fmt.Println(contents)
+
 	userInfo := models.UserInfo{}
 
 	err = json.Unmarshal([]byte(contents), &userInfo)

@@ -605,16 +605,28 @@ func init() {
     "userInfo": {
       "type": "object",
       "properties": {
+        "client_id": {
+          "type": "string"
+        },
         "email": {
           "type": "string"
         },
         "id": {
           "type": "string"
         },
+        "login": {
+          "type": "string"
+        },
         "name": {
           "type": "string"
         },
         "picture": {
+          "type": "string"
+        },
+        "psuid": {
+          "type": "string"
+        },
+        "uid": {
           "type": "string"
         },
         "verified_email": {
@@ -1226,16 +1238,28 @@ func init() {
     "userInfo": {
       "type": "object",
       "properties": {
+        "client_id": {
+          "type": "string"
+        },
         "email": {
           "type": "string"
         },
         "id": {
           "type": "string"
         },
+        "login": {
+          "type": "string"
+        },
         "name": {
           "type": "string"
         },
         "picture": {
+          "type": "string"
+        },
+        "psuid": {
+          "type": "string"
+        },
+        "uid": {
           "type": "string"
         },
         "verified_email": {

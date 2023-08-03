@@ -416,6 +416,14 @@ definitions:
   userInfo:
     type: object
     properties:
+      login:
+        type: string
+      client_id:
+        type: string
+      uid:
+        type: string
+      psuid:
+        type: string
       id: 
         type: string
       email: 

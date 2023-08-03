@@ -17,17 +17,29 @@ import (
 // swagger:model userInfo
 type UserInfo struct {
 
+	// client id
+	ClientID string `json:"client_id,omitempty"`
+
 	// email
 	Email string `json:"email,omitempty"`
 
 	// id
 	ID string `json:"id,omitempty"`
 
+	// login
+	Login string `json:"login,omitempty"`
+
 	// name
 	Name string `json:"name,omitempty"`
 
 	// picture
 	Picture string `json:"picture,omitempty"`
+
+	// psuid
+	Psuid string `json:"psuid,omitempty"`
+
+	// uid
+	UID string `json:"uid,omitempty"`
 
 	// verified email
 	VerifiedEmail bool `json:"verified_email,omitempty"`
