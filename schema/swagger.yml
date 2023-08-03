@@ -416,6 +416,10 @@ definitions:
   userInfo:
     type: object
     properties:
+      emails:
+        type: array
+        items:
+          type: string
       login:
         type: string
       client_id:

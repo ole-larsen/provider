@@ -611,6 +611,12 @@ func init() {
         "email": {
           "type": "string"
         },
+        "emails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "id": {
           "type": "string"
         },
@@ -1243,6 +1249,12 @@ func init() {
         },
         "email": {
           "type": "string"
+        },
+        "emails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "id": {
           "type": "string"

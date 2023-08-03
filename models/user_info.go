@@ -23,6 +23,9 @@ type UserInfo struct {
 	// email
 	Email string `json:"email,omitempty"`
 
+	// emails
+	Emails []string `json:"emails"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
