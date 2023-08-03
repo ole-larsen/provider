@@ -21,6 +21,7 @@ var yandexOauthConfig = &oauth2.Config{
 	ClientID:     settings.Settings.Auth.Yandex.ClientID,
 	ClientSecret: settings.Settings.Auth.Yandex.ClientSecret,
 	Endpoint:     yandex.Endpoint,
+	Scopes:       []string{"login:birthday", "login:email", "login:info", "login:avatar"},
 }
 
 func getUserDataFromYandex(code string) (*models.UserInfo, error) {
