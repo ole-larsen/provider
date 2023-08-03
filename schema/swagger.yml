@@ -274,7 +274,60 @@ paths:
           in: query
           required: false
           description: "consent"
-          
+      responses:
+        '200':
+          description: "ok response"
+          schema:
+            "$ref": "#/definitions/userInfo"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
+      summary: "This API endpoint always responds ok"
+  /yandex/login:
+    get:
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: "ok response"
+          schema:
+            "$ref": "#/definitions/ok"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
+      summary: "This API endpoint always responds ok"
+  /google/callback:
+    get:
+      produces:
+      - application/json
+      parameters: 
+        - type: string
+          name: state
+          in: query
+          required: false
+          description: "client state"
+        - type: string
+          name: scope
+          in: query
+          required: false
+          description: "client scope"
+        - type: string
+          name: authuser
+          in: query
+          required: false
+          description: "client identity"
+        - type: string
+          name: prompt
+          in: query
+          required: false
+          description: "consent"
       responses:
         '200':
           description: "ok response"

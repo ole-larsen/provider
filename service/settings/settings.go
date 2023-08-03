@@ -47,9 +47,9 @@ func initSettings() settings {
 	}
 	ss.Domain = domain
 
-	ss.Auth.ClientID = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_ID").(string)
-	ss.Auth.ClientSecret = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET").(string)
-	ss.Auth.Callback = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
+	ss.Auth.Google.ClientID = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_ID").(string)
+	ss.Auth.Google.ClientSecret = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET").(string)
+	ss.Auth.Google.Callback = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
 	logger.Println("load settings done √")
 	return ss
 }
