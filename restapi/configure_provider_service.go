@@ -141,6 +141,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			e.Encode(userInfo)
 		})
 	})
+
 	api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
 		_ = dumpRequest(os.Stdout, "credentials", params.HTTPRequest)
 		domain := settings.Settings.Domain
@@ -234,35 +235,6 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				"user_id":      token.GetUserID(),
 				"access_token": token.GetAccess(),
 			}
-			e := json.NewEncoder(w)
-			e.SetIndent("", "  ")
-			e.Encode(data)
-		})
-	})
-
-	api.PublicPostRefreshHandler = public.PostRefreshHandlerFunc(func(params public.PostRefreshParams) middleware.Responder {
-		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
-			_ = dumpRequest(os.Stdout, "refresh", params.HTTPRequest)
-
-			if params.RefreshToken != nil {
-				logger.Infoln(*params.RefreshToken)
-			}
-
-			token, err := s.Service.Manager.LoadRefreshToken(*params.RefreshToken)
-
-			if err != nil {
-				logger.Errorln(err)
-				http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
-				return
-			}
-
-			data := map[string]interface{}{
-				"expires_in":   int64(token.GetRefreshCreateAt().Add(token.GetRefreshExpiresIn()).Sub(time.Now()).Seconds()),
-				"client_id":    token.GetClientID(),
-				"user_id":      token.GetUserID(),
-				"access_token": token.GetAccess(),
-			}
-
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
 			e.Encode(data)

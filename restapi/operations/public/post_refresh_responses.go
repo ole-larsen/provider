@@ -17,7 +17,7 @@ import (
 const PostRefreshOKCode int = 200
 
 /*
-PostRefreshOK get client id and client secret
+PostRefreshOK refresh access token using refresh_token
 
 swagger:response postRefreshOK
 */

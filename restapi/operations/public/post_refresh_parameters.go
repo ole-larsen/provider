@@ -11,7 +11,9 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/validate"
+
+	"github.com/olelarssen/provider/models"
 )
 
 // NewPostRefreshParams creates a new PostRefreshParams object
@@ -31,14 +33,10 @@ type PostRefreshParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*access token
-	  In: query
+	/*
+	  In: body
 	*/
-	AccessToken *string
-	/*refresh token
-	  In: query
-	*/
-	RefreshToken *string
+	Body *models.Token
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -50,55 +48,29 @@ func (o *PostRefreshParams) BindRequest(r *http.Request, route *middleware.Match
 
 	o.HTTPRequest = r
 
-	qs := runtime.Values(r.URL.Query())
+	if runtime.HasBody(r) {
+		defer r.Body.Close()
+		var body models.Token
+		if err := route.Consumer.Consume(r.Body, &body); err != nil {
+			res = append(res, errors.NewParseError("body", "body", "", err))
+		} else {
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
 
-	qAccessToken, qhkAccessToken, _ := qs.GetOK("access_token")
-	if err := o.bindAccessToken(qAccessToken, qhkAccessToken, route.Formats); err != nil {
-		res = append(res, err)
-	}
+			ctx := validate.WithOperationRequest(r.Context())
+			if err := body.ContextValidate(ctx, route.Formats); err != nil {
+				res = append(res, err)
+			}
 
-	qRefreshToken, qhkRefreshToken, _ := qs.GetOK("refresh_token")
-	if err := o.bindRefreshToken(qRefreshToken, qhkRefreshToken, route.Formats); err != nil {
-		res = append(res, err)
+			if len(res) == 0 {
+				o.Body = &body
+			}
+		}
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-// bindAccessToken binds and validates parameter AccessToken from query.
-func (o *PostRefreshParams) bindAccessToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: false
-	// AllowEmptyValue: false
-
-	if raw == "" { // empty values pass all other validations
-		return nil
-	}
-	o.AccessToken = &raw
-
-	return nil
-}
-
-// bindRefreshToken binds and validates parameter RefreshToken from query.
-func (o *PostRefreshParams) bindRefreshToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: false
-	// AllowEmptyValue: false
-
-	if raw == "" { // empty values pass all other validations
-		return nil
-	}
-	o.RefreshToken = &raw
-
 	return nil
 }

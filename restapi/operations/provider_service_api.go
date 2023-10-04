@@ -73,9 +73,6 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetYandexLoginHandler: public.GetYandexLoginHandlerFunc(func(params public.GetYandexLoginParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetYandexLogin has not yet been implemented")
 		}),
-		PublicPostRefreshHandler: public.PostRefreshHandlerFunc(func(params public.PostRefreshParams) middleware.Responder {
-			return middleware.NotImplemented("operation public.PostRefresh has not yet been implemented")
-		}),
 		PublicPostTokenHandler: public.PostTokenHandlerFunc(func(params public.PostTokenParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.PostToken has not yet been implemented")
 		}),
@@ -136,8 +133,6 @@ type ProviderServiceAPI struct {
 	PublicGetYandexCallbackHandler public.GetYandexCallbackHandler
 	// PublicGetYandexLoginHandler sets the operation handler for the get yandex login operation
 	PublicGetYandexLoginHandler public.GetYandexLoginHandler
-	// PublicPostRefreshHandler sets the operation handler for the post refresh operation
-	PublicPostRefreshHandler public.PostRefreshHandler
 	// PublicPostTokenHandler sets the operation handler for the post token operation
 	PublicPostTokenHandler public.PostTokenHandler
 
@@ -246,9 +241,6 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetYandexLoginHandler == nil {
 		unregistered = append(unregistered, "public.GetYandexLoginHandler")
-	}
-	if o.PublicPostRefreshHandler == nil {
-		unregistered = append(unregistered, "public.PostRefreshHandler")
 	}
 	if o.PublicPostTokenHandler == nil {
 		unregistered = append(unregistered, "public.PostTokenHandler")
@@ -379,10 +371,6 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/yandex/login"] = public.NewGetYandexLogin(o.context, o.PublicGetYandexLoginHandler)
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
-	}
-	o.handlers["POST"]["/refresh"] = public.NewPostRefresh(o.context, o.PublicPostRefreshHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}

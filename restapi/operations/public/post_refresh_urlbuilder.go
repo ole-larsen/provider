@@ -13,12 +13,7 @@ import (
 
 // PostRefreshURL generates an URL for the post refresh operation
 type PostRefreshURL struct {
-	AccessToken  *string
-	RefreshToken *string
-
 	_basePath string
-	// avoid unkeyed usage
-	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -47,26 +42,6 @@ func (o *PostRefreshURL) Build() (*url.URL, error) {
 		_basePath = "/api/v1"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
-
-	qs := make(url.Values)
-
-	var accessTokenQ string
-	if o.AccessToken != nil {
-		accessTokenQ = *o.AccessToken
-	}
-	if accessTokenQ != "" {
-		qs.Set("access_token", accessTokenQ)
-	}
-
-	var refreshTokenQ string
-	if o.RefreshToken != nil {
-		refreshTokenQ = *o.RefreshToken
-	}
-	if refreshTokenQ != "" {
-		qs.Set("refresh_token", refreshTokenQ)
-	}
-
-	_result.RawQuery = qs.Encode()
 
 	return &_result, nil
 }

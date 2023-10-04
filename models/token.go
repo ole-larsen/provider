@@ -28,7 +28,8 @@ type Token struct {
 	ExpiresIn *float64 `json:"expires_in"`
 
 	// refresh token
-	RefreshToken string `json:"refresh_token,omitempty"`
+	// Required: true
+	RefreshToken *string `json:"refresh_token"`
 
 	// scope
 	// Required: true
@@ -48,6 +49,10 @@ func (m *Token) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateExpiresIn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRefreshToken(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -77,6 +82,15 @@ func (m *Token) validateAccessToken(formats strfmt.Registry) error {
 func (m *Token) validateExpiresIn(formats strfmt.Registry) error {
 
 	if err := validate.Required("expires_in", "body", m.ExpiresIn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Token) validateRefreshToken(formats strfmt.Registry) error {
+
+	if err := validate.Required("refresh_token", "body", m.RefreshToken); err != nil {
 		return err
 	}
 
