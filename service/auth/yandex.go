@@ -36,6 +36,7 @@ func getUserDataFromYandex(code string) (*models.UserInfo, error) {
 	req, err := http.NewRequest("GET", oauthYandexUrlAPI, nil)
 	if err != nil {
 		//Handle Error
+		return nil, err
 	}
 
 	req.Header = http.Header{

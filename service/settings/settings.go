@@ -56,7 +56,9 @@ func initSettings() settings {
 	}
 	ss.Domain = domain
 
-	ss.Auth.Google.ClientID, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_IDE").(string)
+	// ###################################################################
+
+	ss.Auth.Google.ClientID, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_ID").(string)
 
 	if !ok {
 		ss.Auth.Google.ClientID = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_ID")
@@ -67,11 +69,14 @@ func initSettings() settings {
 	if !ok {
 		ss.Auth.Google.ClientSecret = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET")
 	}
+
 	ss.Auth.Google.Callback, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK").(string)
 
 	if !ok {
 		ss.Auth.Google.Callback = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK")
 	}
+
+	// ###################################################################
 
 	ss.Auth.Yandex.ClientID, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_ID").(string)
 
@@ -84,11 +89,14 @@ func initSettings() settings {
 	if !ok {
 		ss.Auth.Yandex.ClientSecret = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_SECRET")
 	}
-	ss.Auth.Google.Callback, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK").(string)
+
+	ss.Auth.Yandex.Callback, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK").(string)
 
 	if !ok {
 		ss.Auth.Yandex.Callback = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK")
 	}
+	// ###################################################################
+
 	logger.Println("load settings done √")
 	return ss
 }

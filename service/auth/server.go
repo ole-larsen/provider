@@ -1,7 +1,10 @@
 package auth
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"net/http"
+	"time"
 
 	"github.com/go-oauth2/oauth2/generates"
 	"github.com/go-oauth2/oauth2/manage"
@@ -98,4 +101,16 @@ func (s *Server) NewClient(domain string, clientID string) *models.Credentials {
 		ClientSecret: &clientSecret,
 		Domain:       &domain,
 	}
+}
+
+func generateStateOauthCookie(w http.ResponseWriter) string {
+	var expiration = time.Now().Add(365 * 24 * time.Hour)
+
+	b := make([]byte, 16)
+	rand.Read(b)
+	state := base64.URLEncoding.EncodeToString(b)
+	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: expiration}
+	http.SetCookie(w, &cookie)
+
+	return state
 }
