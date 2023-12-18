@@ -21,9 +21,15 @@ type Yandex struct {
 	Callback     string
 }
 
+type Vk struct {
+	ClientID     string
+	ClientSecret string
+	Callback     string
+}
 type Auth struct {
 	Google
 	Yandex
+	Vk
 }
 
 type settings struct {
@@ -94,6 +100,25 @@ func initSettings() settings {
 
 	if !ok {
 		ss.Auth.Yandex.Callback = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK")
+	}
+	// ###################################################################
+
+	ss.Auth.Vk.ClientID, ok = viper.Get("NEXT_PUBLIC_VK_CLIENT_ID").(string)
+
+	if !ok {
+		ss.Auth.Vk.ClientID = os.Getenv("NEXT_PUBLIC_VK_CLIENT_ID")
+	}
+
+	ss.Auth.Vk.ClientSecret, ok = viper.Get("NEXT_PUBLIC_VK_CLIENT_SECRET").(string)
+
+	if !ok {
+		ss.Auth.Vk.ClientSecret = os.Getenv("NEXT_PUBLIC_VK_CLIENT_SECRET")
+	}
+
+	ss.Auth.Vk.Callback, ok = viper.Get("NEXT_PUBLIC_VK_CLIENT_CALLBACK").(string)
+
+	if !ok {
+		ss.Auth.Vk.Callback = os.Getenv("NEXT_PUBLIC_VK_CLIENT_CALLBACK")
 	}
 	// ###################################################################
 
