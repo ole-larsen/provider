@@ -142,6 +142,38 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 		})
 	})
 
+	api.PublicGetVkLoginHandler = public.GetVkLoginHandlerFunc(func(params public.GetVkLoginParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "vk.login", params.HTTPRequest)
+			u := s.VkLogin(w, p)
+			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
+		})
+	})
+
+	api.PublicGetVkCallbackHandler = public.GetVkCallbackHandlerFunc(func(params public.GetVkCallbackParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "vk.callback", params.HTTPRequest)
+
+			// Read oauthState from Cookie
+			oauthState, _ := params.HTTPRequest.Cookie("oauthstate")
+
+			if params.HTTPRequest.FormValue("state") != oauthState.Value {
+				err := fmt.Errorf("invalid oauth vk state")
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			userInfo, err := s.VkCallback(params.HTTPRequest.FormValue("code"))
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode(userInfo)
+		})
+	})
+
 	api.PublicGetCredentialsHandler = public.GetCredentialsHandlerFunc(func(params public.GetCredentialsParams) middleware.Responder {
 		_ = dumpRequest(os.Stdout, "credentials", params.HTTPRequest)
 		domain := settings.Settings.Domain
