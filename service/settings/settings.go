@@ -26,6 +26,7 @@ type Vk struct {
 	ClientSecret string
 	Callback     string
 }
+
 type Auth struct {
 	Google
 	Yandex
@@ -122,6 +123,7 @@ func initSettings() settings {
 	}
 	// ###################################################################
 
+	logger.Println(ss.Auth.Vk)
 	logger.Println("load settings done √")
 	return ss
 }

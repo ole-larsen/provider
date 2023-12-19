@@ -30,7 +30,7 @@ func getUserDataFromVk(code string) (*models.UserInfo, error) {
 		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
 	}
 
-	fmt.Println(token)
+	fmt.Println(code, token)
 	// client, err := vk.NewClientWithOptions(vk.WithToken(token.AccessToken))
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -81,6 +81,8 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 		AuthCodeURL receive state that is a token to protect the user from CSRF attacks. You must always provide a non-empty string and
 		validate that it matches the the state query parameter on your redirect callback.
 	*/
+	fmt.Println(vkOauthConfig)
+	fmt.Println(settings.Settings.Auth.Vk)
 	return vkOauthConfig.AuthCodeURL(oauthState)
 }
 
