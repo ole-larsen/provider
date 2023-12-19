@@ -376,6 +376,82 @@ func init() {
         }
       }
     },
+    "/vk/callback": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "client state",
+            "name": "state",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "client scope",
+            "name": "scope",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "client identity",
+            "name": "authuser",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "consent",
+            "name": "prompt",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/userInfo"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/vk/login": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/ok"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/yandex/callback": {
       "get": {
         "produces": [
@@ -970,6 +1046,82 @@ func init() {
             "description": "authorize",
             "schema": {
               "$ref": "#/definitions/validate"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/vk/callback": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "client state",
+            "name": "state",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "client scope",
+            "name": "scope",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "client identity",
+            "name": "authuser",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "consent",
+            "name": "prompt",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/userInfo"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/vk/login": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/ok"
             }
           },
           "500": {

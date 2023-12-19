@@ -67,6 +67,12 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetValidateHandler: public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetValidate has not yet been implemented")
 		}),
+		PublicGetVkCallbackHandler: public.GetVkCallbackHandlerFunc(func(params public.GetVkCallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetVkCallback has not yet been implemented")
+		}),
+		PublicGetVkLoginHandler: public.GetVkLoginHandlerFunc(func(params public.GetVkLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetVkLogin has not yet been implemented")
+		}),
 		PublicGetYandexCallbackHandler: public.GetYandexCallbackHandlerFunc(func(params public.GetYandexCallbackParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetYandexCallback has not yet been implemented")
 		}),
@@ -129,6 +135,10 @@ type ProviderServiceAPI struct {
 	PublicGetPingHandler public.GetPingHandler
 	// PublicGetValidateHandler sets the operation handler for the get validate operation
 	PublicGetValidateHandler public.GetValidateHandler
+	// PublicGetVkCallbackHandler sets the operation handler for the get vk callback operation
+	PublicGetVkCallbackHandler public.GetVkCallbackHandler
+	// PublicGetVkLoginHandler sets the operation handler for the get vk login operation
+	PublicGetVkLoginHandler public.GetVkLoginHandler
 	// PublicGetYandexCallbackHandler sets the operation handler for the get yandex callback operation
 	PublicGetYandexCallbackHandler public.GetYandexCallbackHandler
 	// PublicGetYandexLoginHandler sets the operation handler for the get yandex login operation
@@ -235,6 +245,12 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetValidateHandler == nil {
 		unregistered = append(unregistered, "public.GetValidateHandler")
+	}
+	if o.PublicGetVkCallbackHandler == nil {
+		unregistered = append(unregistered, "public.GetVkCallbackHandler")
+	}
+	if o.PublicGetVkLoginHandler == nil {
+		unregistered = append(unregistered, "public.GetVkLoginHandler")
 	}
 	if o.PublicGetYandexCallbackHandler == nil {
 		unregistered = append(unregistered, "public.GetYandexCallbackHandler")
@@ -363,6 +379,14 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/validate"] = public.NewGetValidate(o.context, o.PublicGetValidateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/vk/callback"] = public.NewGetVkCallback(o.context, o.PublicGetVkCallbackHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/vk/login"] = public.NewGetVkLogin(o.context, o.PublicGetVkLoginHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

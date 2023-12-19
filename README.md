@@ -1,3 +1,6 @@
+alias swagger='sudo docker run --rm -it  --user $(id -u):$(id -g) -e GOPATH=$(go env GOPATH):/go -v $HOME:$HOME -w $(pwd) quay.io/goswagger/swagger'
+swagger version
+
 swagger generate server -A provider-service -f ./schema/swagger.yml
 
 swagger generate client -A provider-service -f ./schema/swagger.yml
