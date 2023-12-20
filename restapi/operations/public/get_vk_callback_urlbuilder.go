@@ -9,16 +9,12 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
-
-	"github.com/go-openapi/swag"
 )
 
 // GetVkCallbackURL generates an URL for the get vk callback operation
 type GetVkCallbackURL struct {
-	AccessToken string
-	ExpiresIn   int64
-	State       string
-	UserID      int64
+	Code  string
+	State string
 
 	_basePath string
 	// avoid unkeyed usage
@@ -54,24 +50,14 @@ func (o *GetVkCallbackURL) Build() (*url.URL, error) {
 
 	qs := make(url.Values)
 
-	accessTokenQ := o.AccessToken
-	if accessTokenQ != "" {
-		qs.Set("access_token", accessTokenQ)
-	}
-
-	expiresInQ := swag.FormatInt64(o.ExpiresIn)
-	if expiresInQ != "" {
-		qs.Set("expires_in", expiresInQ)
+	codeQ := o.Code
+	if codeQ != "" {
+		qs.Set("code", codeQ)
 	}
 
 	stateQ := o.State
 	if stateQ != "" {
 		qs.Set("state", stateQ)
-	}
-
-	userIDQ := swag.FormatInt64(o.UserID)
-	if userIDQ != "" {
-		qs.Set("user_id", userIDQ)
 	}
 
 	_result.RawQuery = qs.Encode()

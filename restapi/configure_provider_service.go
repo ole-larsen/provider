@@ -154,7 +154,8 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 			_ = dumpRequest(os.Stdout, "vk.callback", params.HTTPRequest)
 
-			logger.Println(params)
+			logger.Println(params.Code)
+			logger.Println(params.State)
 			request := params.HTTPRequest
 			// Read oauthState from Cookie
 			oauthState, _ := request.Cookie("oauthstate")

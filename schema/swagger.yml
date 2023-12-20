@@ -330,20 +330,10 @@ paths:
       - application/json
       parameters: 
         - type: string
-          name: access_token
+          name: code
           in: query
           required: true
-          description: "access token"
-        - type: integer
-          name: expires_in
-          in: query
-          required: true
-          description: "token expires"
-        - type: integer
-          name: user_id
-          in: query
-          required: true
-          description: "client identity"
+          description: "access code"
         - type: string
           name: state
           in: query
