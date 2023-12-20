@@ -154,51 +154,25 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 			_ = dumpRequest(os.Stdout, "vk.callback", params.HTTPRequest)
 
-			logger.Println(params.Code)
-			logger.Println(params.State)
 			request := params.HTTPRequest
+
 			// Read oauthState from Cookie
 			oauthState, _ := request.Cookie("oauthstate")
 
-			// logger.Println(request.URL)
-			// logger.Println(params)
-			// logger.Println(request.Response)
-
-			// logger.Println(params.HTTPRequest.URL.Fragment)
-			// fragments, _ := url.ParseQuery(params.HTTPRequest.URL.Fragment)
-			// logger.Println("Fragments:", fragments)
-
-			/*
-							// Your url with hash
-				    s := "http://localhost:8080/#access_token=tokenhere&scope=scopeshere"
-
-				    // ---> here is where you will get the url hash #
-				    fmt.Println(u.Fragment)
-				    if fragments["access_token"] != nil {
-				      fmt.Println("Access token:", fragments["access_token"][0])
-				    } else {
-				      fmt.Println("Access token not found")
-				    }
-
-
-				      fmt.Println("Raw query:", u.RawQuery)
-				    m, _ := url.ParseQuery(u.RawQuery)
-				    fmt.Println(m)
-			*/
-			if params.HTTPRequest.FormValue("state") != oauthState.Value {
-				err := fmt.Errorf("invalid oauth vk state")
+			if params.State != oauthState.Value {
+				err := fmt.Errorf("invalid vk state")
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			// userInfo, err := s.VkCallback(params.HTTPRequest.FormValue("code"))
+			userInfo, err := s.VkCallback(params.Code, params.State)
 
-			// if err != nil {
-			// 	http.Error(w, err.Error(), http.StatusBadRequest)
-			// }
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
 
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
-			e.Encode(nil)
+			e.Encode(userInfo)
 		})
 	})
 
