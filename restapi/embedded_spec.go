@@ -388,27 +388,31 @@ func init() {
         "parameters": [
           {
             "type": "string",
+            "description": "access token",
+            "name": "access_token",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "token expires",
+            "name": "expires_in",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "client identity",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
             "description": "client state",
             "name": "state",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "client scope",
-            "name": "scope",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "client identity",
-            "name": "authuser",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "consent",
-            "name": "prompt",
-            "in": "query"
+            "in": "query",
+            "required": true
           }
         ],
         "responses": {
@@ -1069,27 +1073,31 @@ func init() {
         "parameters": [
           {
             "type": "string",
+            "description": "access token",
+            "name": "access_token",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "token expires",
+            "name": "expires_in",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "client identity",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
             "description": "client state",
             "name": "state",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "client scope",
-            "name": "scope",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "client identity",
-            "name": "authuser",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "consent",
-            "name": "prompt",
-            "in": "query"
+            "in": "query",
+            "required": true
           }
         ],
         "responses": {

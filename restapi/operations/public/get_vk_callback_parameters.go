@@ -12,6 +12,8 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // NewGetVkCallbackParams creates a new GetVkCallbackParams object
@@ -31,22 +33,26 @@ type GetVkCallbackParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*client identity
+	/*access token
+	  Required: true
 	  In: query
 	*/
-	Authuser *string
-	/*consent
+	AccessToken string
+	/*token expires
+	  Required: true
 	  In: query
 	*/
-	Prompt *string
-	/*client scope
-	  In: query
-	*/
-	Scope *string
+	ExpiresIn int64
 	/*client state
+	  Required: true
 	  In: query
 	*/
-	State *string
+	State string
+	/*client identity
+	  Required: true
+	  In: query
+	*/
+	UserID int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -60,23 +66,23 @@ func (o *GetVkCallbackParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	qs := runtime.Values(r.URL.Query())
 
-	qAuthuser, qhkAuthuser, _ := qs.GetOK("authuser")
-	if err := o.bindAuthuser(qAuthuser, qhkAuthuser, route.Formats); err != nil {
+	qAccessToken, qhkAccessToken, _ := qs.GetOK("access_token")
+	if err := o.bindAccessToken(qAccessToken, qhkAccessToken, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
-	qPrompt, qhkPrompt, _ := qs.GetOK("prompt")
-	if err := o.bindPrompt(qPrompt, qhkPrompt, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
-	qScope, qhkScope, _ := qs.GetOK("scope")
-	if err := o.bindScope(qScope, qhkScope, route.Formats); err != nil {
+	qExpiresIn, qhkExpiresIn, _ := qs.GetOK("expires_in")
+	if err := o.bindExpiresIn(qExpiresIn, qhkExpiresIn, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
 	qState, qhkState, _ := qs.GetOK("state")
 	if err := o.bindState(qState, qhkState, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qUserID, qhkUserID, _ := qs.GetOK("user_id")
+	if err := o.bindUserID(qUserID, qhkUserID, route.Formats); err != nil {
 		res = append(res, err)
 	}
 	if len(res) > 0 {
@@ -85,74 +91,96 @@ func (o *GetVkCallbackParams) BindRequest(r *http.Request, route *middleware.Mat
 	return nil
 }
 
-// bindAuthuser binds and validates parameter Authuser from query.
-func (o *GetVkCallbackParams) bindAuthuser(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindAccessToken binds and validates parameter AccessToken from query.
+func (o *GetVkCallbackParams) bindAccessToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("access_token", "query", rawData)
+	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: false
+	// Required: true
 	// AllowEmptyValue: false
 
-	if raw == "" { // empty values pass all other validations
-		return nil
+	if err := validate.RequiredString("access_token", "query", raw); err != nil {
+		return err
 	}
-	o.Authuser = &raw
+	o.AccessToken = raw
 
 	return nil
 }
 
-// bindPrompt binds and validates parameter Prompt from query.
-func (o *GetVkCallbackParams) bindPrompt(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindExpiresIn binds and validates parameter ExpiresIn from query.
+func (o *GetVkCallbackParams) bindExpiresIn(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("expires_in", "query", rawData)
+	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: false
+	// Required: true
 	// AllowEmptyValue: false
 
-	if raw == "" { // empty values pass all other validations
-		return nil
-	}
-	o.Prompt = &raw
-
-	return nil
-}
-
-// bindScope binds and validates parameter Scope from query.
-func (o *GetVkCallbackParams) bindScope(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
+	if err := validate.RequiredString("expires_in", "query", raw); err != nil {
+		return err
 	}
 
-	// Required: false
-	// AllowEmptyValue: false
-
-	if raw == "" { // empty values pass all other validations
-		return nil
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("expires_in", "query", "int64", raw)
 	}
-	o.Scope = &raw
+	o.ExpiresIn = value
 
 	return nil
 }
 
 // bindState binds and validates parameter State from query.
 func (o *GetVkCallbackParams) bindState(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("state", "query", rawData)
+	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: false
+	// Required: true
 	// AllowEmptyValue: false
 
-	if raw == "" { // empty values pass all other validations
-		return nil
+	if err := validate.RequiredString("state", "query", raw); err != nil {
+		return err
 	}
-	o.State = &raw
+	o.State = raw
+
+	return nil
+}
+
+// bindUserID binds and validates parameter UserID from query.
+func (o *GetVkCallbackParams) bindUserID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("user_id", "query", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// AllowEmptyValue: false
+
+	if err := validate.RequiredString("user_id", "query", raw); err != nil {
+		return err
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("user_id", "query", "int64", raw)
+	}
+	o.UserID = value
 
 	return nil
 }
