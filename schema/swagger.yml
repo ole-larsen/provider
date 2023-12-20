@@ -330,25 +330,25 @@ paths:
       - application/json
       parameters: 
         - type: string
-          name: state
+          name: access_token
           in: query
-          required: false
-          description: "client state"
-        - type: string
-          name: scope
+          required: true
+          description: "access token"
+        - type: integer
+          name: expires_in
           in: query
-          required: false
-          description: "client scope"
-        - type: string
-          name: authuser
+          required: true
+          description: "token expires"
+        - type: integer
+          name: user_id
           in: query
-          required: false
+          required: true
           description: "client identity"
         - type: string
-          name: prompt
+          name: state
           in: query
-          required: false
-          description: "consent"
+          required: true
+          description: "client state"
       responses:
         '200':
           description: "ok response"
