@@ -38,10 +38,6 @@ func getUserDataFromVk(code string) (*models.VkUserInfo, error) {
 		return nil, err
 	}
 
-	req.Header = http.Header{
-		"Content-Type": {"application/json"},
-	}
-
 	response, err := client.Do(req)
 	defer response.Body.Close()
 	if err != nil {
