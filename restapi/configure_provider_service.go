@@ -164,7 +164,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			userInfo, err := s.VkCallback(params.Code, params.State)
+			userInfo, err := s.VkCallback(params.Code)
 
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)

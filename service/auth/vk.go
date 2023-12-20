@@ -23,13 +23,14 @@ var vkOauthConfig = &oauth2.Config{
 	Scopes:       []string{},
 }
 
-func getUserDataFromVk(code string, state string) (*models.VkUserInfo, error) {
+func getUserDataFromVk(code string) (*models.VkUserInfo, error) {
 	// Use code to get token and get user info from Google.
-	fmt.Println(code, state)
 	/*
 		https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
 	*/
 	oauthVkUrlAPI := vkOauthConfig.Endpoint.TokenURL + "?client_id=" + vkOauthConfig.ClientID + "&client_secret=" + "&redirect_url=" + vkOauthConfig.RedirectURL + "&code=" + code
+	fmt.Println(code, oauthVkUrlAPI)
+
 	client := http.Client{}
 	req, err := http.NewRequest("GET", oauthVkUrlAPI, nil)
 	if err != nil {
@@ -53,12 +54,13 @@ func getUserDataFromVk(code string, state string) (*models.VkUserInfo, error) {
 	}
 
 	var vkUserInfo models.VkUserInfo
+	var resp interface{}
+	err = json.Unmarshal([]byte(contents), &resp)
+	fmt.Println(resp, err)
 
-	err = json.Unmarshal([]byte(contents), &vkUserInfo)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(vkUserInfo)
 
 	return &vkUserInfo, nil
 }
@@ -76,6 +78,6 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 	return authURL
 }
 
-func (s *Server) VkCallback(code string, state string) (*models.VkUserInfo, error) {
-	return getUserDataFromVk(code, state)
+func (s *Server) VkCallback(code string) (*models.VkUserInfo, error) {
+	return getUserDataFromVk(code)
 }
