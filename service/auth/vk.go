@@ -29,7 +29,7 @@ func getUserDataFromVk(code string) (*models.VkUserInfo, error) {
 		https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
 	*/
 	oauthVkUrlAPI := vkOauthConfig.Endpoint.TokenURL + "?client_id=" + vkOauthConfig.ClientID + "&client_secret=" + vkOauthConfig.ClientSecret + "&redirect_url=" + vkOauthConfig.RedirectURL + "&code=" + code
-	fmt.Println(code, oauthVkUrlAPI)
+	fmt.Println(oauthVkUrlAPI)
 
 	client := http.Client{}
 	req, err := http.NewRequest("GET", oauthVkUrlAPI, nil)
@@ -73,7 +73,7 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 		AuthCodeURL receive state that is a token to protect the user from CSRF attacks. You must always provide a non-empty string and
 		validate that it matches the the state query parameter on your redirect callback.
 	*/
-	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=friends&response_type=code&v=5.131"
+	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=all&response_type=code&v=5.131"
 
 	return authURL
 }
