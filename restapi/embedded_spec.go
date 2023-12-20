@@ -679,6 +679,20 @@ func init() {
           "type": "string"
         }
       }
+    },
+    "vkUserInfo": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "integer"
+        }
+      }
     }
   },
   "tags": [
@@ -1348,6 +1362,20 @@ func init() {
       "properties": {
         "data": {
           "type": "string"
+        }
+      }
+    },
+    "vkUserInfo": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "integer"
         }
       }
     }
