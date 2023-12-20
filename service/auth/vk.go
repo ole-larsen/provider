@@ -83,7 +83,7 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 	*/
 	fmt.Println(vkOauthConfig)
 	fmt.Println(settings.Settings.Auth.Vk)
-	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "scope=12,display=mobile"
+	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "scope=12"
 
 	return authURL
 }
