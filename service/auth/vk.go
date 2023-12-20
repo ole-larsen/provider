@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/go-openapi/runtime"
@@ -22,59 +23,44 @@ var vkOauthConfig = &oauth2.Config{
 	Scopes:       []string{},
 }
 
-func getUserDataFromVk(code string, state string) (*models.UserInfo, error) {
+func getUserDataFromVk(code string, state string) (*models.VkUserInfo, error) {
 	// Use code to get token and get user info from Google.
 	fmt.Println(code, state)
 	/*
 		https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
 	*/
-	token, err := vkOauthConfig.Exchange(context.Background(), code)
-	fmt.Println(err, token)
-
+	oauthVkUrlAPI := vkOauthConfig.Endpoint.TokenURL + "?client_id=" + vkOauthConfig.ClientID + "&client_secret=" + "&redirect_url=" + vkOauthConfig.RedirectURL + "&code=" + code
+	client := http.Client{}
+	req, err := http.NewRequest("GET", oauthVkUrlAPI, nil)
 	if err != nil {
-		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
+		//Handle Error
+		return nil, err
 	}
 
-	// client, err := vk.NewClientWithOptions(vk.WithToken(token.AccessToken))
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//user := getCurrentUser(client)
-
-	// client := http.Client{}
-	// req, err := http.NewRequest("GET", oauthVKUrlAPI, nil)
-	// if err != nil {
-	// 	//Handle Error
-	// 	return nil, err
-	// }
-
-	// req.Header = http.Header{
-	// 	"Content-Type":  {"application/json"},
-	// 	"Authorization": {"OAuth " + token.AccessToken},
-	// }
-
-	// response, err := client.Do(req)
-	// defer response.Body.Close()
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed getting user info: %s", err.Error())
-	// }
-
-	// contents, err := ioutil.ReadAll(response.Body)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed read response: %s", err.Error())
-	// }
-
-	userInfo := models.UserInfo{}
-
-	// err = json.Unmarshal([]byte(contents), &userInfo)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	userInfo.Token = &models.Token{
-		AccessToken:  &token.AccessToken,
-		RefreshToken: &token.RefreshToken,
+	req.Header = http.Header{
+		"Content-Type": {"application/json"},
 	}
-	return &userInfo, nil
+
+	response, err := client.Do(req)
+	defer response.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("failed getting access token: %s", err.Error())
+	}
+
+	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed read response: %s", err.Error())
+	}
+
+	var vkUserInfo models.VkUserInfo
+
+	err = json.Unmarshal([]byte(contents), &vkUserInfo)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(vkUserInfo)
+
+	return &vkUserInfo, nil
 }
 
 func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
@@ -90,6 +76,6 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 	return authURL
 }
 
-func (s *Server) VkCallback(code string, state string) (*models.UserInfo, error) {
+func (s *Server) VkCallback(code string, state string) (*models.VkUserInfo, error) {
 	return getUserDataFromVk(code, state)
 }
