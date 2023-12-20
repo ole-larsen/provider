@@ -22,15 +22,19 @@ var vkOauthConfig = &oauth2.Config{
 	Scopes:       []string{},
 }
 
-func getUserDataFromVk(code string) (*models.UserInfo, error) {
+func getUserDataFromVk(code string, state string) (*models.UserInfo, error) {
 	// Use code to get token and get user info from Google.
-
+	fmt.Println(code, state)
+	/*
+		https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
+	*/
 	token, err := vkOauthConfig.Exchange(context.Background(), code)
+	fmt.Println(err, token)
+
 	if err != nil {
 		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
 	}
 
-	fmt.Println(code, token)
 	// client, err := vk.NewClientWithOptions(vk.WithToken(token.AccessToken))
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -86,6 +90,6 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 	return authURL
 }
 
-func (s *Server) VkCallback(code string) (*models.UserInfo, error) {
-	return getUserDataFromVk(code)
+func (s *Server) VkCallback(code string, state string) (*models.UserInfo, error) {
+	return getUserDataFromVk(code, state)
 }
