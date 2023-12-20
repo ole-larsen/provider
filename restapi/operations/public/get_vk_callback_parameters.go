@@ -12,7 +12,6 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
@@ -33,26 +32,16 @@ type GetVkCallbackParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*access token
+	/*access code
 	  Required: true
 	  In: query
 	*/
-	AccessToken string
-	/*token expires
-	  Required: true
-	  In: query
-	*/
-	ExpiresIn int64
+	Code string
 	/*client state
 	  Required: true
 	  In: query
 	*/
 	State string
-	/*client identity
-	  Required: true
-	  In: query
-	*/
-	UserID int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -66,23 +55,13 @@ func (o *GetVkCallbackParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	qs := runtime.Values(r.URL.Query())
 
-	qAccessToken, qhkAccessToken, _ := qs.GetOK("access_token")
-	if err := o.bindAccessToken(qAccessToken, qhkAccessToken, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
-	qExpiresIn, qhkExpiresIn, _ := qs.GetOK("expires_in")
-	if err := o.bindExpiresIn(qExpiresIn, qhkExpiresIn, route.Formats); err != nil {
+	qCode, qhkCode, _ := qs.GetOK("code")
+	if err := o.bindCode(qCode, qhkCode, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
 	qState, qhkState, _ := qs.GetOK("state")
 	if err := o.bindState(qState, qhkState, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
-	qUserID, qhkUserID, _ := qs.GetOK("user_id")
-	if err := o.bindUserID(qUserID, qhkUserID, route.Formats); err != nil {
 		res = append(res, err)
 	}
 	if len(res) > 0 {
@@ -91,10 +70,10 @@ func (o *GetVkCallbackParams) BindRequest(r *http.Request, route *middleware.Mat
 	return nil
 }
 
-// bindAccessToken binds and validates parameter AccessToken from query.
-func (o *GetVkCallbackParams) bindAccessToken(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindCode binds and validates parameter Code from query.
+func (o *GetVkCallbackParams) bindCode(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
-		return errors.Required("access_token", "query", rawData)
+		return errors.Required("code", "query", rawData)
 	}
 	var raw string
 	if len(rawData) > 0 {
@@ -104,36 +83,10 @@ func (o *GetVkCallbackParams) bindAccessToken(rawData []string, hasKey bool, for
 	// Required: true
 	// AllowEmptyValue: false
 
-	if err := validate.RequiredString("access_token", "query", raw); err != nil {
+	if err := validate.RequiredString("code", "query", raw); err != nil {
 		return err
 	}
-	o.AccessToken = raw
-
-	return nil
-}
-
-// bindExpiresIn binds and validates parameter ExpiresIn from query.
-func (o *GetVkCallbackParams) bindExpiresIn(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("expires_in", "query", rawData)
-	}
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: true
-	// AllowEmptyValue: false
-
-	if err := validate.RequiredString("expires_in", "query", raw); err != nil {
-		return err
-	}
-
-	value, err := swag.ConvertInt64(raw)
-	if err != nil {
-		return errors.InvalidType("expires_in", "query", "int64", raw)
-	}
-	o.ExpiresIn = value
+	o.Code = raw
 
 	return nil
 }
@@ -155,32 +108,6 @@ func (o *GetVkCallbackParams) bindState(rawData []string, hasKey bool, formats s
 		return err
 	}
 	o.State = raw
-
-	return nil
-}
-
-// bindUserID binds and validates parameter UserID from query.
-func (o *GetVkCallbackParams) bindUserID(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("user_id", "query", rawData)
-	}
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: true
-	// AllowEmptyValue: false
-
-	if err := validate.RequiredString("user_id", "query", raw); err != nil {
-		return err
-	}
-
-	value, err := swag.ConvertInt64(raw)
-	if err != nil {
-		return errors.InvalidType("user_id", "query", "int64", raw)
-	}
-	o.UserID = value
 
 	return nil
 }

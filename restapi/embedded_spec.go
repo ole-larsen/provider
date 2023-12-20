@@ -388,22 +388,8 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "access token",
-            "name": "access_token",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "integer",
-            "description": "token expires",
-            "name": "expires_in",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "integer",
-            "description": "client identity",
-            "name": "user_id",
+            "description": "access code",
+            "name": "code",
             "in": "query",
             "required": true
           },
@@ -1073,22 +1059,8 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "access token",
-            "name": "access_token",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "integer",
-            "description": "token expires",
-            "name": "expires_in",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "integer",
-            "description": "client identity",
-            "name": "user_id",
+            "description": "access code",
+            "name": "code",
             "in": "query",
             "required": true
           },
