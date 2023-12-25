@@ -150,7 +150,7 @@ func initSettings() settings {
 	}
 	// ###################################################################
 
-	logger.Println(ss.Auth.Vk)
+	logger.Println(ss.Origin)
 	logger.Println("load settings done √")
 	return ss
 }
