@@ -42,6 +42,7 @@ type Auth struct {
 type settings struct {
 	Logger log.Logger
 	Domain string
+	Origin string
 	Auth
 }
 
@@ -143,6 +144,10 @@ func initSettings() settings {
 		ss.Auth.Telegram.AuthURL = os.Getenv("NEXT_PUBLIC_TELEGRAM_AUTH_URL")
 	}
 
+	ss.Origin, ok = viper.Get("NEXT_PUBLIC_URL").(string)
+	if !ok {
+		ss.Origin = os.Getenv("NEXT_PUBLIC_URL")
+	}
 	// ###################################################################
 
 	logger.Println(ss.Auth.Vk)
