@@ -60,6 +60,7 @@ func (s *Server) TelegramLogin(w http.ResponseWriter, p runtime.Producer) string
 	origin := settings.Settings.Origin
 	authURL := settings.Settings.Telegram.AuthURL + "?bot_id=" + settings.Settings.Telegram.Token + "&public_key=" +
 		settings.Settings.Telegram.PK + "&nonce=" + nonce + "&scope=all" + "&state=" + state + "&origin=" + origin
+	s.logger.Println(authURL)	
 	return authURL
 }
 
