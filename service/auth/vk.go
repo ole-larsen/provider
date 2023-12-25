@@ -28,7 +28,7 @@ func getUserDataFromVk(code string) (*models.VkUserInfo, error) {
 	/*
 		https://oauth.vk.com/access_token?client_id=1&client_secret=H2Pk8htyFD8024mZaPHm&redirect_uri=http://mysite.ru&code=7a6fa4dff77a228eeda56603b8f53806c883f011c40b72630bb50df056f6479e52a
 	*/
-	oauthVkUrlAPI := vkOauthConfig.Endpoint.TokenURL + "?client_id=" + vkOauthConfig.ClientID + "&client_secret=" + vkOauthConfig.ClientSecret + "&redirect_url=" + vkOauthConfig.RedirectURL + "&code=" + code
+	oauthVkUrlAPI := vkOauthConfig.Endpoint.TokenURL + "?client_id=" + vkOauthConfig.ClientID + "&client_secret=" + vkOauthConfig.ClientSecret + "&redirect_uri=" + vkOauthConfig.RedirectURL + "&code=" + code
 	fmt.Println(oauthVkUrlAPI)
 
 	client := http.Client{}
