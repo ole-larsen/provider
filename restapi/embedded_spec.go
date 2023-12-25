@@ -278,6 +278,72 @@ func init() {
         }
       }
     },
+    "/telegram/callback": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "tg hash",
+            "name": "hash",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "tg payload",
+            "name": "payload",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/userInfo"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/telegram/login": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/ok"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/token": {
       "post": {
         "consumes": [
@@ -952,6 +1018,72 @@ func init() {
             "description": "ping response",
             "schema": {
               "$ref": "#/definitions/ping"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/telegram/callback": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "tg hash",
+            "name": "hash",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "tg payload",
+            "name": "payload",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/userInfo"
+            }
+          },
+          "500": {
+            "description": "When some error occurs",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/telegram/login": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "public"
+        ],
+        "summary": "This API endpoint always responds ok",
+        "responses": {
+          "200": {
+            "description": "ok response",
+            "schema": {
+              "$ref": "#/definitions/ok"
             }
           },
           "500": {

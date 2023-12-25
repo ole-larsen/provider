@@ -64,6 +64,12 @@ func NewProviderServiceAPI(spec *loads.Document) *ProviderServiceAPI {
 		PublicGetPingHandler: public.GetPingHandlerFunc(func(params public.GetPingParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetPing has not yet been implemented")
 		}),
+		PublicGetTelegramCallbackHandler: public.GetTelegramCallbackHandlerFunc(func(params public.GetTelegramCallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetTelegramCallback has not yet been implemented")
+		}),
+		PublicGetTelegramLoginHandler: public.GetTelegramLoginHandlerFunc(func(params public.GetTelegramLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation public.GetTelegramLogin has not yet been implemented")
+		}),
 		PublicGetValidateHandler: public.GetValidateHandlerFunc(func(params public.GetValidateParams) middleware.Responder {
 			return middleware.NotImplemented("operation public.GetValidate has not yet been implemented")
 		}),
@@ -133,6 +139,10 @@ type ProviderServiceAPI struct {
 	InstrumentsGetMetricsHandler instruments.GetMetricsHandler
 	// PublicGetPingHandler sets the operation handler for the get ping operation
 	PublicGetPingHandler public.GetPingHandler
+	// PublicGetTelegramCallbackHandler sets the operation handler for the get telegram callback operation
+	PublicGetTelegramCallbackHandler public.GetTelegramCallbackHandler
+	// PublicGetTelegramLoginHandler sets the operation handler for the get telegram login operation
+	PublicGetTelegramLoginHandler public.GetTelegramLoginHandler
 	// PublicGetValidateHandler sets the operation handler for the get validate operation
 	PublicGetValidateHandler public.GetValidateHandler
 	// PublicGetVkCallbackHandler sets the operation handler for the get vk callback operation
@@ -242,6 +252,12 @@ func (o *ProviderServiceAPI) Validate() error {
 	}
 	if o.PublicGetPingHandler == nil {
 		unregistered = append(unregistered, "public.GetPingHandler")
+	}
+	if o.PublicGetTelegramCallbackHandler == nil {
+		unregistered = append(unregistered, "public.GetTelegramCallbackHandler")
+	}
+	if o.PublicGetTelegramLoginHandler == nil {
+		unregistered = append(unregistered, "public.GetTelegramLoginHandler")
 	}
 	if o.PublicGetValidateHandler == nil {
 		unregistered = append(unregistered, "public.GetValidateHandler")
@@ -375,6 +391,14 @@ func (o *ProviderServiceAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/ping"] = public.NewGetPing(o.context, o.PublicGetPingHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/telegram/callback"] = public.NewGetTelegramCallback(o.context, o.PublicGetTelegramCallbackHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/telegram/login"] = public.NewGetTelegramLogin(o.context, o.PublicGetTelegramLoginHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

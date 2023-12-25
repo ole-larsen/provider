@@ -9,6 +9,11 @@ import (
 
 var Settings = initSettings()
 
+type Telegram struct {
+	Token   string
+	PK      string
+	AuthURL string
+}
 type Google struct {
 	ClientID     string
 	ClientSecret string
@@ -31,6 +36,7 @@ type Auth struct {
 	Google
 	Yandex
 	Vk
+	Telegram
 }
 
 type settings struct {
@@ -121,6 +127,22 @@ func initSettings() settings {
 	if !ok {
 		ss.Auth.Vk.Callback = os.Getenv("NEXT_PUBLIC_VK_CLIENT_CALLBACK")
 	}
+
+	ss.Auth.Telegram.Token, ok = viper.Get("NEXT_PUBLIC_TELEGRAM_BOT_KEY").(string)
+	if !ok {
+		ss.Auth.Telegram.Token = os.Getenv("NEXT_PUBLIC_TELEGRAM_BOT_KEY")
+	}
+
+	ss.Auth.Telegram.PK, ok = viper.Get("NEXT_PUBLIC_TELEGRAM_PUBLIC_KEY").(string)
+	if !ok {
+		ss.Auth.Telegram.PK = os.Getenv("NEXT_PUBLIC_TELEGRAM_PUBLIC_KEY")
+	}
+
+	ss.Auth.Telegram.AuthURL, ok = viper.Get("NEXT_PUBLIC_TELEGRAM_AUTH_URL").(string)
+	if !ok {
+		ss.Auth.Telegram.AuthURL = os.Getenv("NEXT_PUBLIC_TELEGRAM_AUTH_URL")
+	}
+
 	// ###################################################################
 
 	logger.Println(ss.Auth.Vk)
