@@ -3,7 +3,11 @@
 package restapi
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"crypto/tls"
+	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -48,6 +52,17 @@ func dumpRequest(writer io.Writer, header string, r *http.Request) error {
 		return err
 	}
 	return nil
+}
+
+type User struct {
+	Id        int64  `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Username  string `json:"username"`
+}
+
+type Payload struct {
+	User User `json:"user"`
 }
 
 func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
@@ -173,6 +188,61 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
 			e.Encode(userInfo)
+		})
+	})
+
+	api.PublicGetTelegramLoginHandler = public.GetTelegramLoginHandlerFunc(func(params public.GetTelegramLoginParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "telegram.login", params.HTTPRequest)
+			
+			u := s.TelegramLogin(w, p)
+			
+			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
+		})
+	})
+
+	api.PublicGetTelegramCallbackHandler = public.GetTelegramCallbackHandlerFunc(func(params public.GetTelegramCallbackParams) middleware.Responder {
+		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
+			_ = dumpRequest(os.Stdout, "telegram.callback", params.HTTPRequest)
+
+			r := params.HTTPRequest
+
+			hash := r.URL.Query().Get("hash")
+			payloadB64 := r.URL.Query().Get("payload")
+			payloadBytes, err := base64.StdEncoding.DecodeString(payloadB64)
+			if err != nil {
+				http.Error(w, "Invalid payload", http.StatusBadRequest)
+				return
+			}
+
+			var payload Payload
+			err = json.Unmarshal(payloadBytes, &payload)
+			if err != nil {
+				http.Error(w, "Invalid payload", http.StatusBadRequest)
+				return
+			}
+
+			h := hmac.New(sha256.New, []byte(settings.Settings.Auth.Telegram.PK+settings.Settings.Auth.Telegram.PK))
+			h.Write([]byte(payloadB64))
+			checkHash := hex.EncodeToString(h.Sum(nil))
+
+			if hash != checkHash {
+				http.Error(w, "Invalid hash", http.StatusBadRequest)
+				return
+			}
+
+			user := payload.User
+			//userId := user.Id
+			// firstName := user.FirstName
+			// lastName := user.LastName
+			// username := user.Username
+			logger.Println(user)
+			// Store user information in your database
+			// ...}
+
+			e := json.NewEncoder(w)
+			e.SetIndent("", "  ")
+			e.Encode("")
 		})
 	})
 

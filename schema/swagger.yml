@@ -350,6 +350,50 @@ paths:
             "$ref": "#/definitions/error"
       tags:
       - public
+      summary: "This API endpoint always responds ok"  
+  /telegram/login:
+    get:
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: "ok response"
+          schema:
+            "$ref": "#/definitions/ok"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
+      summary: "This API endpoint always responds ok"
+  /telegram/callback:
+    get:
+      produces:
+      - application/json
+      parameters: 
+        - type: string
+          name: hash
+          in: query
+          required: true
+          description: "tg hash"
+        - type: string
+          name: payload
+          in: query
+          required: true
+          description: "tg payload"
+      responses:
+        '200':
+          description: "ok response"
+          schema:
+            "$ref": "#/definitions/userInfo"
+        '500':
+          description: "When some error occurs"
+          schema:
+            "$ref": "#/definitions/error"
+      tags:
+      - public
       summary: "This API endpoint always responds ok"    
 definitions:
   error:
