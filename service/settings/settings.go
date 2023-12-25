@@ -63,9 +63,9 @@ func initSettings() settings {
 	// we have to do the type assertion, we know the underlying value is string
 
 	ss.Logger = logger
-	domain, ok := viper.Get("DOMAIN").(string)
+	domain, ok := viper.Get("NEXT_PUBLIC_URL").(string)
 	if !ok {
-		domain = os.Getenv("DOMAIN")
+		domain = os.Getenv("NEXT_PUBLIC_URL")
 	}
 	ss.Domain = domain
 
