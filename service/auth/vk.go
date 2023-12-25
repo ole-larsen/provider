@@ -69,7 +69,7 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 		AuthCodeURL receive state that is a token to protect the user from CSRF attacks. You must always provide a non-empty string and
 		validate that it matches the the state query parameter on your redirect callback.
 	*/
-	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=all&response_type=code&v=5.131"
+	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=offline&response_type=code&v=5.131"
 
 	return authURL
 }
