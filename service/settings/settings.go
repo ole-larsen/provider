@@ -42,6 +42,7 @@ type Auth struct {
 type settings struct {
 	Logger log.Logger
 	Domain string
+	Origin string
 	Auth
 }
 
@@ -63,9 +64,9 @@ func initSettings() settings {
 	// we have to do the type assertion, we know the underlying value is string
 
 	ss.Logger = logger
-	domain, ok := viper.Get("NEXT_PUBLIC_URL").(string)
+	domain, ok := viper.Get("DOMAIN").(string)
 	if !ok {
-		domain = os.Getenv("NEXT_PUBLIC_URL")
+		domain = os.Getenv("DOMAIN")
 	}
 	ss.Domain = domain
 
@@ -143,6 +144,10 @@ func initSettings() settings {
 		ss.Auth.Telegram.AuthURL = os.Getenv("NEXT_PUBLIC_TELEGRAM_AUTH_URL")
 	}
 
+	ss.Origin, ok = viper.Get("NEXT_PUBLIC_URL").(string)
+	if !ok {
+		ss.Origin = os.Getenv("NEXT_PUBLIC_URL")
+	}
 	// ###################################################################
 
 	logger.Println(ss.Auth.Vk)
