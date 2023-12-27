@@ -118,11 +118,13 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
-			verified := "false"
-			if userInfo.VerifiedEmail {
-				verified = "true"
-			}
+
+			logger.Println(userInfo)
 			if userInfo != nil && userInfo.Token != nil {
+				verified := "false"
+				if userInfo.VerifiedEmail {
+					verified = "true"
+				}
 				tokenType := *userInfo.Token.TokenType
 				scope := *userInfo.Token.Scope
 				refreshToken := *userInfo.Token.RefreshToken
@@ -141,7 +143,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 					"token_type":     {tokenType},
 					"verified_email": {verified},
 				}
-				url := settings.Settings.Auth.Google.Redirect + queryParams.Encode() //
+				url := settings.Settings.Auth.Google.Redirect + "?" + queryParams.Encode() //
 
 				http.RedirectHandler(url, http.StatusPermanentRedirect)
 				return
