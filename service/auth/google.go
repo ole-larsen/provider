@@ -28,6 +28,7 @@ func getUserDataFromGoogle(code string) (*models.UserInfo, error) {
 	// Use code to get token and get user info from Google.
 
 	token, err := googleOauthConfig.Exchange(context.Background(), code)
+	
 	if err != nil {
 		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
 	}

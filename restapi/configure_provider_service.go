@@ -161,7 +161,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 						"verified_email": {verified},
 					}
 					url := settings.Settings.Auth.Google.Redirect + "?" + queryParams.Encode() //
-
+					logger.Println(url)
 					http.RedirectHandler(url, http.StatusPermanentRedirect)
 					return
 				}
