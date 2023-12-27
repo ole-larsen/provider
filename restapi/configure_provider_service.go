@@ -119,9 +119,16 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
 
-			logger.Println(userInfo)
-			/*
-				if userInfo != nil && userInfo.Token != nil {
+			if userInfo != nil {
+				logger.Println(userInfo)
+				out, err := json.Marshal(userInfo)
+				if err != nil {
+					panic(err)
+				}
+
+				fmt.Println(string(out))
+
+				if userInfo.Token != nil {
 					verified := "false"
 					if userInfo.VerifiedEmail {
 						verified = "true"
@@ -167,16 +174,16 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 						return
 					}
 				}
-			*/
-			out, err := json.Marshal(userInfo)
-			if err != nil {
-				panic(err)
-			}
+				e := json.NewEncoder(w)
+				e.SetIndent("", "  ")
+				e.Encode(userInfo)
+				return
 
-			fmt.Println(string(out))
-			e := json.NewEncoder(w)
-			e.SetIndent("", "  ")
-			e.Encode(userInfo)
+			}
+			/*
+
+			 */
+			http.Error(w, "Something went wrong", http.StatusBadRequest)
 		})
 	})
 
