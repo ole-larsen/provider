@@ -118,7 +118,41 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
+			verified := "false"
+			if userInfo.VerifiedEmail {
+				verified = "true"
+			}
+			if userInfo != nil && userInfo.Token != nil {
+				tokenType := *userInfo.Token.TokenType
+				scope := *userInfo.Token.Scope
+				refreshToken := *userInfo.Token.RefreshToken
+				expiresIn := fmt.Sprintf("%f", *userInfo.Token.ExpiresIn)
+				accessToken := *userInfo.Token.AccessToken
+				queryParams := url.Values{
+					"client_id":      {userInfo.ClientID},
+					"email":          {userInfo.Email},
+					"id":             {userInfo.ID},
+					"name":           {userInfo.Name},
+					"picture":        {userInfo.Picture},
+					"access_token":   {accessToken},
+					"expires_in":     {expiresIn},
+					"refresh_token":  {refreshToken},
+					"scope":          {scope},
+					"token_type":     {tokenType},
+					"verified_email": {verified},
+				}
+				url := settings.Settings.Auth.Google.Redirect + queryParams.Encode() //
 
+				http.RedirectHandler(url, http.StatusPermanentRedirect)
+				return
+			}
+
+			out, err := json.Marshal(userInfo)
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Println(string(out))
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
 			e.Encode(userInfo)
@@ -194,9 +228,9 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 	api.PublicGetTelegramLoginHandler = public.GetTelegramLoginHandlerFunc(func(params public.GetTelegramLoginParams) middleware.Responder {
 		return middleware.ResponderFunc(func(w http.ResponseWriter, p runtime.Producer) {
 			_ = dumpRequest(os.Stdout, "telegram.login", params.HTTPRequest)
-			
+
 			u := s.TelegramLogin(w, p)
-			
+
 			http.Redirect(w, params.HTTPRequest, u, http.StatusFound)
 		})
 	})

@@ -18,6 +18,7 @@ type Google struct {
 	ClientID     string
 	ClientSecret string
 	Callback     string
+	Redirect     string
 }
 
 type Yandex struct {
@@ -88,6 +89,12 @@ func initSettings() settings {
 
 	if !ok {
 		ss.Auth.Google.Callback = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_CALLBACK")
+	}
+
+	ss.Auth.Google.Redirect, ok = viper.Get("NEXT_PUBLIC_GOOGLE_CLIENT_REDIRECT").(string)
+
+	if !ok {
+		ss.Auth.Google.Redirect = os.Getenv("NEXT_PUBLIC_GOOGLE_CLIENT_REDIRECT")
 	}
 
 	// ###################################################################
