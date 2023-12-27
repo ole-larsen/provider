@@ -3,6 +3,7 @@ package auth
 import (
 	"math/rand"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/go-openapi/runtime"
@@ -57,12 +58,22 @@ func (s *Server) TelegramLogin(w http.ResponseWriter, p runtime.Producer) string
 
 	nonce := randStringBytes(8)
 	state := generateStateOauthCookie(w)
-	//origin := settings.Settings.Origin
+	origin := settings.Settings.Origin
 
-	authURL := settings.Settings.Telegram.AuthURL + "?bot_id=" + settings.Settings.Telegram.Token + "&public_key=" +
-		settings.Settings.Telegram.PK + "&nonce=" + nonce + "&scope=all" + "&state=" + state + "&origin=https://dev.sheira.ru/oauth2/telegram"
-	s.logger.Println(authURL)
-	return authURL
+	authUrl, err := url.Parse(settings.Settings.Telegram.AuthURL)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	query := authUrl.Query()
+	query.Set("bot_id", settings.Settings.Telegram.Token)
+	query.Set("public_key", settings.Settings.Telegram.PK)
+	query.Set("nonce", nonce)
+	query.Set("scope", "all")
+	query.Set("state", state)
+	query.Set("origin", origin+"/oauth2/telegram")
+	authUrl.RawQuery = query.Encode()
+	s.logger.Println(authUrl.String())
+	return authUrl.String()
 }
 
 func (s *Server) TelegramCallback(code string) (*models.VkUserInfo, error) {
