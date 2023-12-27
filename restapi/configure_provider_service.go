@@ -125,28 +125,46 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 				if userInfo.VerifiedEmail {
 					verified = "true"
 				}
-				tokenType := *userInfo.Token.TokenType
-				scope := *userInfo.Token.Scope
-				refreshToken := *userInfo.Token.RefreshToken
-				expiresIn := fmt.Sprintf("%f", *userInfo.Token.ExpiresIn)
-				accessToken := *userInfo.Token.AccessToken
-				queryParams := url.Values{
-					"client_id":      {userInfo.ClientID},
-					"email":          {userInfo.Email},
-					"id":             {userInfo.ID},
-					"name":           {userInfo.Name},
-					"picture":        {userInfo.Picture},
-					"access_token":   {accessToken},
-					"expires_in":     {expiresIn},
-					"refresh_token":  {refreshToken},
-					"scope":          {scope},
-					"token_type":     {tokenType},
-					"verified_email": {verified},
+				tokenType := ""
+				if userInfo.Token.TokenType != nil {
+					tokenType = *userInfo.Token.TokenType
 				}
-				url := settings.Settings.Auth.Google.Redirect + "?" + queryParams.Encode() //
+				scope := ""
+				if userInfo.Token.Scope != nil {
+					scope = *userInfo.Token.Scope
+				}
+				refreshToken := ""
+				if userInfo.Token.RefreshToken != nil {
+					refreshToken = *userInfo.Token.RefreshToken
+				}
+				expiresIn := ""
+				if userInfo.Token.ExpiresIn != nil {
+					expiresIn = fmt.Sprintf("%f", *userInfo.Token.ExpiresIn)
+				}
+				accessToken := ""
+				if userInfo.Token.AccessToken != nil {
+					accessToken = *userInfo.Token.AccessToken
+				}
 
-				http.RedirectHandler(url, http.StatusPermanentRedirect)
-				return
+				if accessToken != "" {
+					queryParams := url.Values{
+						"client_id":      {userInfo.ClientID},
+						"email":          {userInfo.Email},
+						"id":             {userInfo.ID},
+						"name":           {userInfo.Name},
+						"picture":        {userInfo.Picture},
+						"access_token":   {accessToken},
+						"expires_in":     {expiresIn},
+						"refresh_token":  {refreshToken},
+						"scope":          {scope},
+						"token_type":     {tokenType},
+						"verified_email": {verified},
+					}
+					url := settings.Settings.Auth.Google.Redirect + "?" + queryParams.Encode() //
+
+					http.RedirectHandler(url, http.StatusPermanentRedirect)
+					return
+				}
 			}
 
 			out, err := json.Marshal(userInfo)
