@@ -180,20 +180,13 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 						// https://dev.sheira.ru/oauth2/google?access_token=ya29.a0AfB_byDTryehG3On9pM1XD-UDxc6khX1ERgp8oTpHigP_NdJ_HIT8Cpv8eNRYxJTuibkeqRWfS-nVRPYlsYgl3XTFdeZbYZ6ZPIxe5DJMe5isUQ6eSEfZNHBCxT8Pp-recLpOzIjd12yTyLZEd6hI-MYF_QvayvcHAaCgYKAUgSARESFQHGX2MiM5saL72C1gj_XiTBATS5TQ0169&client_id=&email=ole.larssen777%40gmail.com&expires_in=&id=103106816053840921051&name=Ole+Larsen&picture=https%3A%2F%2Flh3.googleusercontent.com%2Fa-%2FALV-UjWTJZmy61Fb9KG-Nobl9-DMzP4SLgKzEZ8ApIehB5Gf%3Ds96-c&verified_email=true
 						url := settings.Settings.Auth.Google.Redirect + "?" + queryParams.Encode() //
 						logger.Println(url)
-						http.RedirectHandler("https://yandex.ru", http.StatusPermanentRedirect)
-						http.Redirect(w, params.HTTPRequest, "https://google.com", http.StatusPermanentRedirect)
+
+						http.Redirect(w, params.HTTPRequest, url, http.StatusPermanentRedirect)
 						return
 					}
 				}
-				e := json.NewEncoder(w)
-				e.SetIndent("", "  ")
-				e.Encode(userInfo)
-				return
-
 			}
-			/*
 
-			 */
 			http.Error(w, "Something went wrong", http.StatusBadRequest)
 		})
 	})
