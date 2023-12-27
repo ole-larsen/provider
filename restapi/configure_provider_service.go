@@ -308,7 +308,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 
 			e := json.NewEncoder(w)
 			e.SetIndent("", "  ")
-			e.Encode("")
+			e.Encode(user)
 		})
 	})
 

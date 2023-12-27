@@ -57,10 +57,10 @@ func (s *Server) TelegramLogin(w http.ResponseWriter, p runtime.Producer) string
 
 	nonce := randStringBytes(8)
 	state := generateStateOauthCookie(w)
-	origin := settings.Settings.Origin
+	//origin := settings.Settings.Origin
 
 	authURL := settings.Settings.Telegram.AuthURL + "?bot_id=" + settings.Settings.Telegram.Token + "&public_key=" +
-		settings.Settings.Telegram.PK + "&nonce=" + nonce + "&scope=all" + "&state=" + state + "&origin=" + origin
+		settings.Settings.Telegram.PK + "&nonce=" + nonce + "&scope=all" + "&state=" + state + "&origin=https://dev.sheira.ru/oauth2/telegram"
 	s.logger.Println(authURL)
 	return authURL
 }
