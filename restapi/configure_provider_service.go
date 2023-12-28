@@ -250,15 +250,14 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 
 					if accessToken != "" {
 						queryParams := url.Values{
-							"client_id":      {userInfo.ClientID},
-							"email":          {userInfo.Emails[0]},
-							"login":          {userInfo.Login},
-							"psuid":          {userInfo.Psuid},
-							"id":             {userInfo.ID},
-							"name":           {userInfo.Name},
-							"picture":        {userInfo.Picture},
-							"access_token":   {accessToken},
-							"verified_email": {verified},
+							"client_id":    {userInfo.ClientID},
+							"email":        {userInfo.Emails[0]},
+							"login":        {userInfo.Login},
+							"psuid":        {userInfo.Psuid},
+							"id":           {userInfo.ID},
+							"name":         {userInfo.Name},
+							"picture":      {userInfo.Picture},
+							"access_token": {accessToken},
 						}
 						if tokenType != "" {
 							queryParams.Add("token_type", tokenType)
