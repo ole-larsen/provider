@@ -216,10 +216,72 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 			}
+			if userInfo != nil {
+				logger.Println(userInfo)
+				out, err := json.Marshal(userInfo)
+				if err != nil {
+					panic(err)
+				}
+				fmt.Println("#####################################")
+				fmt.Println(string(out))
+				fmt.Println("#####################################")
 
-			e := json.NewEncoder(w)
-			e.SetIndent("", "  ")
-			e.Encode(userInfo)
+				if userInfo.Token != nil {
+					tokenType := ""
+					if userInfo.Token.TokenType != nil {
+						tokenType = *userInfo.Token.TokenType
+					}
+					scope := ""
+					if userInfo.Token.Scope != nil {
+						scope = *userInfo.Token.Scope
+					}
+					refreshToken := ""
+					if userInfo.Token.RefreshToken != nil {
+						refreshToken = *userInfo.Token.RefreshToken
+					}
+					expiresIn := ""
+					if userInfo.Token.ExpiresIn != nil {
+						expiresIn = fmt.Sprintf("%f", *userInfo.Token.ExpiresIn)
+					}
+					accessToken := ""
+					if userInfo.Token.AccessToken != nil {
+						accessToken = *userInfo.Token.AccessToken
+					}
+
+					if accessToken != "" {
+						queryParams := url.Values{
+							"client_id":      {userInfo.ClientID},
+							"email":          {userInfo.Emails[0]},
+							"login":          {userInfo.Login},
+							"psuid":          {userInfo.Psuid},
+							"id":             {userInfo.ID},
+							"name":           {userInfo.Name},
+							"picture":        {userInfo.Picture},
+							"access_token":   {accessToken},
+							"verified_email": {verified},
+						}
+						if tokenType != "" {
+							queryParams.Add("token_type", tokenType)
+						}
+						if scope != "" {
+							queryParams.Add("scope", scope)
+						}
+						if refreshToken != "" {
+							queryParams.Add("refresh_token", refreshToken)
+						}
+						if expiresIn != "" {
+							queryParams.Add("expires_in", expiresIn)
+						}
+						url := settings.Settings.Auth.Yandex.Redirect + "?" + queryParams.Encode() //
+						logger.Println(url)
+
+						http.Redirect(w, params.HTTPRequest, url, http.StatusPermanentRedirect)
+						return
+					}
+				}
+			// e := json.NewEncoder(w)
+			// e.SetIndent("", "  ")
+			// e.Encode(userInfo)
 		})
 	})
 

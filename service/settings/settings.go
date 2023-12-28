@@ -25,6 +25,7 @@ type Yandex struct {
 	ClientID     string
 	ClientSecret string
 	Callback     string
+	Redirect     string
 }
 
 type Vk struct {
@@ -115,6 +116,12 @@ func initSettings() settings {
 
 	if !ok {
 		ss.Auth.Yandex.Callback = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_CALLBACK")
+	}
+
+	ss.Auth.Yandex.Redirect, ok = viper.Get("NEXT_PUBLIC_YANDEX_CLIENT_REDIRECT").(string)
+
+	if !ok {
+		ss.Auth.Yandex.Redirect = os.Getenv("NEXT_PUBLIC_YANDEX_CLIENT_REDIRECT")
 	}
 	// ###################################################################
 
