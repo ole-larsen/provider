@@ -279,9 +279,7 @@ func configureAPI(api *operations.ProviderServiceAPI) http.Handler {
 						return
 					}
 				}
-			// e := json.NewEncoder(w)
-			// e.SetIndent("", "  ")
-			// e.Encode(userInfo)
+			}
 		})
 	})
 
