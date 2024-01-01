@@ -76,7 +76,7 @@ func (s *Server) VkLogin(w http.ResponseWriter, p runtime.Producer) string {
 		https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri= http://example.com/callback&scope=friends&response_type=token&v=:version&state=123456
 	*/
 	//authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=offline&response_type=code&v=5.131"
-	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=email,phone_number&v=5.131&response_type=token&state=" + oauthState
+	authURL := vkOauthConfig.AuthCodeURL(oauthState) + "&scope=email,phone_number,offline&v=5.131&response_type=token&state=" + oauthState
 	s.logger.Println(authURL)
 	return authURL
 }
