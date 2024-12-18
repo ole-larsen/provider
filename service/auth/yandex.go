@@ -4,23 +4,27 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/go-openapi/runtime"
 	"github.com/olelarssen/provider/models"
 	"github.com/olelarssen/provider/service/settings"
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/yandex"
 )
 
 const oauthYandexUrlAPI = "https://login.yandex.ru/info?format=json"
+
+var Endpoint = oauth2.Endpoint{
+	AuthURL:  "https://oauth.yandex.ru/authorize",
+	TokenURL: "https://oauth.yandex.ru/token",
+}
 
 var yandexOauthConfig = &oauth2.Config{
 	RedirectURL:  settings.Settings.Auth.Yandex.Callback,
 	ClientID:     settings.Settings.Auth.Yandex.ClientID,
 	ClientSecret: settings.Settings.Auth.Yandex.ClientSecret,
-	Endpoint:     yandex.Endpoint,
+	Endpoint:     Endpoint, //yandex.Endpoint,
 	Scopes:       []string{"login:birthday", "login:email", "login:info", "login:avatar"},
 }
 
@@ -45,12 +49,12 @@ func getUserDataFromYandex(code string) (*models.UserInfo, error) {
 	}
 
 	response, err := client.Do(req)
-	defer response.Body.Close()
 	if err != nil {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
+	defer response.Body.Close()
 
-	contents, err := ioutil.ReadAll(response.Body)
+	contents, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed read response: %s", err.Error())
 	}
